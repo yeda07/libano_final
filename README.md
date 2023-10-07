@@ -1,37 +1,48 @@
 
-> Free React Admin Dashboard made with Material-UI components and React.
+# Minimal React Admin Dashboard
 
-![preview](public/assets/preview.jpg)
+![Preview](public/assets/preview.jpg)
 
-| [Minimal Free](https://minimal-kit-react.vercel.app/) | [Minimal](https://material-ui.com/store/items/minimal-dashboard/) |
-| ----------------------------------------------------- | :---------------------------------------------------------------- |
-| **6** Demo pages                                      | **50+** demo pages                                                |
-| -                                                     | ✓ Multi-language                                                  |
-| -                                                     | ✓ Dark/Light Mode 🌓                                              |
-| -                                                     | ✓ [More components](https://minimals.cc/components)               |
-| -                                                     | ✓ Next.js version                                                 |
-| -                                                     | ✓ TypeScript version                                              |
-| -                                                     | ✓ Design files (Figma & Sketch)                                   |
+[Minimal React Admin Dashboard](https://minimal-kit-react.vercel.app/) es un panel de administración gratuito desarrollado con componentes Material-UI y React. Este proyecto es una herramienta poderosa para crear aplicaciones de administración elegantes y funcionales.
 
-## Page demo
+## Características Destacadas
+
+- **6 páginas de demostración** que muestran diversas funcionalidades.
+- **Multi-idioma** para llegar a una audiencia global.
+- **Modo Claro/Oscuro** para adaptarse a las preferencias del usuario.
+- **Más de 50 páginas de demostración** disponibles en la versión completa.
+- **Compatibilidad con Next.js** para una experiencia de desarrollo mejorada.
+- **Versión con TypeScript** para un desarrollo más seguro y productivo.
+- **Archivos de diseño** disponibles en Figma y Sketch para facilitar la personalización.
+
+## Demostraciones
+
+Puedes explorar las siguientes páginas de demostración:
 
 - [Dashboard](https://minimal-kit-react.vercel.app/dashboard/app)
-- [Users](https://minimal-kit-react.vercel.app/dashboard/user)
-- [Product](https://minimal-kit-react.vercel.app/dashboard/products)
+- [Usuarios](https://minimal-kit-react.vercel.app/dashboard/user)
+- [Productos](https://minimal-kit-react.vercel.app/dashboard/products)
 - [Blog](https://minimal-kit-react.vercel.app/dashboard/blog)
-- [Login](https://minimal-kit-react.vercel.app/login)
-- [Not Found](https://minimal-kit-react.vercel.app/404)
+- [Inicio de Sesión](https://minimal-kit-react.vercel.app/login)
+- [Página no encontrada](https://minimal-kit-react.vercel.app/404)
 
-## Getting started
+## Comenzar
 
-- Recommended `node js 16.x` and `npm 6+`. (suggestion v16.15.0)
-- Install dependencies: `npm install` / `yarn install`
-- Start the project: `npm run start` / `yarn start`
+Para comenzar con este proyecto, sigue estos pasos:
 
-## License
+1. Asegúrate de tener **Node.js 16.x** y **npm 6+** instalados en tu sistema (se recomienda la versión 16.15.0 de Node.js).
+2. Instala las dependencias ejecutando `npm install` o `yarn install`.
+3. Inicia el proyecto con `npm run start` o `yarn start`.
 
-Distributed under the MIT License. See [LICENSE](https://github.com/minimal-ui-kit/minimal.free/blob/main/LICENSE.md) for more information.
+## Licencia
 
-## Contact us
+Este proyecto se distribuye bajo la **Licencia MIT**. Consulta [LICENSE](https://github.com/minimal-ui-kit/minimal.free/blob/main/LICENSE.md) para obtener más información.
 
-Email Us: support@minimals.cc
+## Contáctanos
+
+Si tienes alguna pregunta o necesitas asistencia, no dudes en contactarnos por correo electrónico: [support@minimals.cc](jossajhon123454@gmail.com).
+
+
+
+
+
