@@ -38,7 +38,7 @@ export const StyledLabel = styled(Box)(({ theme, ownerState }) => {
       }),
       // OUTLINED
       ...(outlinedVariant && {
-        backgroundColor: 'transparent',
+        backgroundColor: 'blue',
         color: theme.palette[ownerState.color].main,
         border: `1px solid ${theme.palette[ownerState.color].main}`,
       }),
