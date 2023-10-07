@@ -22,28 +22,28 @@ export default function Page404() {
   return (
     <>
       <Helmet>
-        <title> 404 Page Not Found | Minimal UI </title>
+        <title> 404 Página no encontrada</title>
       </Helmet>
 
       <Container>
         <StyledContent sx={{ textAlign: 'center', alignItems: 'center' }}>
           <Typography variant="h3" paragraph>
-            Sorry, page not found!
+            Lo sentimos, ¡página no encontrada!
           </Typography>
 
           <Typography sx={{ color: 'text.secondary' }}>
-            Sorry, we couldn’t find the page you’re looking for. Perhaps you’ve mistyped the URL? Be sure to check your
-            spelling.
+            Lo sentimos, no hemos podido encontrar la página que busca. ¿Quizá ha escrito mal la URL? Asegúrese de
+            ortografía.
           </Typography>
 
           <Box
             component="img"
             src="/assets/illustrations/illustration_404.svg"
-            sx={{ height: 260, mx: 'auto', my: { xs: 5, sm: 10 } }}
+            sx={{ height: 300, mx: 'auto', my: { xs: 5, sm: 10 } }}
           />
 
           <Button to="/" size="large" variant="contained" component={RouterLink}>
-            Go to Home
+            Ir a Inicio
           </Button>
         </StyledContent>
       </Container>
