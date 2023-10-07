@@ -18,7 +18,7 @@ export default function LoginForm() {
   };
 
   return (
-    <>
+    <div style={{ background: 'black', height: '100vh' }}> {/* Cambia el color de fondo a negro */}
       <Stack spacing={3}>
         <TextField name="correo" label="Correo" />
 
@@ -48,6 +48,6 @@ export default function LoginForm() {
       <LoadingButton fullWidth size="small" type="submit" variant="contained" onClick={handleClick} >
         Accede
       </LoadingButton>
-    </>
+    </div>
   );
 }
