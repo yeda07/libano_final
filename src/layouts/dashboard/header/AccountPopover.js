@@ -13,11 +13,11 @@ const MENU_OPTIONS = [
     icon: 'eva:home-fill',
   },
   {
-    label: 'Profile',
+    label: 'Perfil',
     icon: 'eva:person-fill',
   },
   {
-    label: 'Settings',
+    label: 'Configuración',
     icon: 'eva:settings-2-fill',
   },
 ];
@@ -98,7 +98,7 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <MenuItem onClick={handleClose} sx={{ m: 1 }}>
-          Logout
+        Cerrar Sesión
         </MenuItem>
       </Popover>
     </>
