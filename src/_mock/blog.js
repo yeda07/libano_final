@@ -25,7 +25,7 @@ const POST_TITLES = [
   'Revisión de Portafolio: ¿Este Portafolio es Demasiado Creativo?',
   'Akkers van Margraten',
   'Icono Gradiente de Boleta',
-  '¡Aquí tienes un concepto de motocicleta josa que no "suciona"!',
+  '¡Aquí tienes un concepto de motocicleta josaq que no "suciona"!',
   'Cómo Animar un SVG con border-image',
 ];
 
