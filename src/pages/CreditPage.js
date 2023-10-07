@@ -180,7 +180,11 @@ export default function CreditPage() {
                         <TableCell align="left">{amount}</TableCell>
 
                         <TableCell align="left">{applicationDate}</TableCell>
-
+                        
+                        {/* aqui cambio en color aplication date */}
+                        <TableCell align="left">
+                          <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
+                        </TableCell>
                      
 
                         <TableCell align="right">
