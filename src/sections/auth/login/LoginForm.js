@@ -20,16 +20,16 @@ export default function LoginForm() {
   return (
     <>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
+        <TextField name="correo" label="Correo" />
 
         <TextField
-          name="password"
-          label="Password"
+          name="contraseña"
+          label="Contraseña"
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+              <InputAdornment position="izq">
+                <IconButton onClick={() => setShowPassword(!showPassword)} edge="start">
                   <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
                 </IconButton>
               </InputAdornment>
@@ -41,12 +41,12 @@ export default function LoginForm() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
         <Checkbox name="remember" label="Remember me" />
         <Link variant="subtitle2" underline="hover">
-          Forgot password?
+        ¿Has olvidado tu contraseña?
         </Link>
       </Stack>
 
-      <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
-        Login
+      <LoadingButton fullWidth size="small" type="submit" variant="contained" onClick={handleClick} >
+        Accede
       </LoadingButton>
     </>
   );
