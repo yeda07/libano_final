@@ -26,12 +26,12 @@ export default function DashboardAppPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard | Minimal UI </title>
+        <title> Pagina Principal  </title>
       </Helmet>
 
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome back
+          Bienvenidos a nuestra tapiceria
         </Typography>
 
         <Grid container spacing={3}>
@@ -53,8 +53,8 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} md={6} lg={8}>
             <AppWebsiteVisits
-              title="Website Visits"
-              subheader="(+43%) than last year"
+              title="Visitas al sitio web"
+              subheader="Mas visitas que el año pasado"
               chartLabels={[
                 '01/01/2003',
                 '02/01/2003',
@@ -93,12 +93,12 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentVisits
-              title="Current Visits"
+              title="Visitas Actuales"
               chartData={[
-                { label: 'America', value: 4344 },
-                { label: 'Asia', value: 5435 },
-                { label: 'Europe', value: 1443 },
-                { label: 'Africa', value: 4443 },
+                { label: 'MOCOA', value: 4344 },
+                { label: 'VILLAGARZON', value: 5435 },
+                { label: 'PTO ASIS', value: 1443 },
+                { label: 'PTO GUZMAN', value: 4443 },
               ]}
               chartColors={[
                 theme.palette.primary.main,
@@ -111,7 +111,7 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} md={6} lg={8}>
             <AppConversionRates
-              title="Conversion Rates"
+              title="TASAS DE CONVERSION"
               subheader="(+43%) than last year"
               chartData={[
                 { label: 'Italy', value: 400 },
@@ -130,7 +130,7 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentSubject
-              title="Current Subject"
+              title="tema actual"
               chartLabels={['English', 'History', 'Physics', 'Geography', 'Chinese', 'Math']}
               chartData={[
                 { name: 'Series 1', data: [80, 50, 30, 40, 100, 20] },
@@ -143,7 +143,7 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} md={6} lg={8}>
             <AppNewsUpdate
-              title="News Update"
+              title="Actualizaciones de nuevos productos"
               list={[...Array(5)].map((_, index) => ({
                 id: faker.datatype.uuid(),
                 title: faker.name.jobTitle(),
@@ -156,7 +156,7 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} md={6} lg={4}>
             <AppOrderTimeline
-              title="Order Timeline"
+              title="Cronograma del pedido"
               list={[...Array(5)].map((_, index) => ({
                 id: faker.datatype.uuid(),
                 title: [
@@ -174,27 +174,27 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} md={6} lg={4}>
             <AppTrafficBySite
-              title="Traffic by Site"
+              title="Visita nuestros sitios"
               list={[
                 {
                   name: 'FaceBook',
                   value: 323234,
-                  icon: <Iconify icon={'eva:facebook-fill'} color="#1877F2" width={32} />,
+                  icon: <Iconify icon={'eva:facebook-fill'} color="#EC5B9F" width={32} />,
                 },
                 {
                   name: 'Google',
                   value: 341212,
-                  icon: <Iconify icon={'eva:google-fill'} color="#DF3E30" width={32} />,
+                  icon: <Iconify icon={'eva:google-fill'} color="#DB42E9" width={32} />,
                 },
                 {
                   name: 'Linkedin',
                   value: 411213,
-                  icon: <Iconify icon={'eva:linkedin-fill'} color="#006097" width={32} />,
+                  icon: <Iconify icon={'eva:linkedin-fill'} color="#E06024" width={32} />,
                 },
                 {
                   name: 'Twitter',
                   value: 443232,
-                  icon: <Iconify icon={'eva:twitter-fill'} color="#1C9CEA" width={32} />,
+                  icon: <Iconify icon={'eva:twitter-fill'} color="#B2EB2D" width={32} />,
                 },
               ]}
             />
@@ -202,7 +202,7 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} md={6} lg={8}>
             <AppTasks
-              title="Tasks"
+              title="Tareas"
               list={[
                 { id: '1', label: 'Create FireStone Logo' },
                 { id: '2', label: 'Add SCSS and JS files if required' },
