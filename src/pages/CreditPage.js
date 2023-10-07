@@ -64,7 +64,8 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function CreditPage() {
-  const [open, setOpen] = useState(null);
+  
+    const [open, setOpen] = useState(null);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -85,7 +86,7 @@ export default function CreditPage() {
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
-
+  
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelecteds = CREDITLIST.map((n) => n.applicantName);
@@ -180,11 +181,7 @@ export default function CreditPage() {
 
                         <TableCell align="left">{applicationDate}</TableCell>
 
-                        <TableCell align="left">
-                          <Label color={(status === 'rejected' && 'error') || (status === 'approved' && 'success')}>
-                            {sentenceCase(status)}
-                          </Label>
-                        </TableCell>
+                     
 
                         <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
