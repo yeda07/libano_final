@@ -36,19 +36,19 @@ export default function DashboardAppPage() {
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3} >
-            <AppWidgetSummary title="Ventas semanales" total={714000} icon={'ant-design:android-filled'} />
+            <AppWidgetSummary title="Ventas semanales" total={400} icon={'ant-design:android-filled'} />
                       </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Nuevos usuarios" total={1352831} color="info" icon={'ant-design:apple-filled'} />
+            <AppWidgetSummary title="Nuevos usuarios" total={60} color="info" icon={'ant-design:apple-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Pedidos de artículos" total={1723315} color="warning" icon={'ant-design:windows-filled'} />
+            <AppWidgetSummary title="Pedidos de artículos" total={100} color="warning" icon={'ant-design:windows-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Informes de errores" total={234} color="error" icon={'ant-design:bug-filled'} />
+            <AppWidgetSummary title="Informes de errores" total={10} color="error" icon={'ant-design:bug-filled'} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
@@ -170,7 +170,7 @@ export default function DashboardAppPage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4}>
+          <Grid item xs={12} md={10} lg={12}>
             <AppTrafficBySite
               title="Visita nuestros sitios"
               list={[
@@ -198,18 +198,7 @@ export default function DashboardAppPage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={8}>
-            <AppTasks
-              title="Tareas"
-              list={[
-                { id: '1', label: 'Create FireStone Logo' },
-                { id: '2', label: 'Add SCSS and JS files if required' },
-                { id: '3', label: 'Stakeholder Meeting' },
-                { id: '4', label: 'Scoping & Estimations' },
-                { id: '5', label: 'Sprint Showcase' },
-              ]}
-            />
-          </Grid>
+          
         </Grid>
       </Container>
     </>
