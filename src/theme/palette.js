@@ -4,8 +4,8 @@ import { alpha } from '@mui/material/styles';
 
 // SETUP COLORS
 const GREY = {
-  0: '#FFFFFF',
-  100: '#F9FAFB',
+  0: '#DD2E4B',
+  100: '#DCF7F7',
   200: '#F4F6F8',
   300: '#DFE3E8',
   400: '#C4CDD5',
@@ -18,7 +18,7 @@ const GREY = {
 
 const PRIMARY = {
   lighter: '#D1E9FC',
-  light: '#76B0F1',
+  light: '#76F1A5',
   main: '#2065D1',
   dark: '#103996',
   darker: '#061B64',
@@ -26,7 +26,7 @@ const PRIMARY = {
 };
 
 const SECONDARY = {
-  lighter: '#D6E4FF',
+  lighter: '#8BDABF',
   light: '#84A9FF',
   main: '#3366FF',
   dark: '#1939B7',
@@ -35,7 +35,7 @@ const SECONDARY = {
 };
 
 const INFO = {
-  lighter: '#D0F2FF',
+  lighter: '#FEFFD0',
   light: '#74CAFF',
   main: '#1890FF',
   dark: '#0C53B7',
@@ -44,16 +44,16 @@ const INFO = {
 };
 
 const SUCCESS = {
-  lighter: '#E9FCD4',
+  lighter: '#8AA0E9',
   light: '#AAF27F',
   main: '#54D62C',
   dark: '#229A16',
-  darker: '#08660D',
+  darker: '#D2EBD4',
   contrastText: GREY[800],
 };
 
 const WARNING = {
-  lighter: '#FFF7CD',
+  lighter: '#E398F1',
   light: '#FFE16A',
   main: '#FFC107',
   dark: '#B78103',
@@ -62,11 +62,11 @@ const WARNING = {
 };
 
 const ERROR = {
-  lighter: '#FFE7D9',
+  lighter: '#E1EE2F',
   light: '#FFA48D',
   main: '#FF4842',
   dark: '#B72136',
-  darker: '#7A0C2E',
+  darker: '#1F1D1D',
   contrastText: '#fff',
 };
 
