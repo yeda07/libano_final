@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+ // Assuming the CreditForm component is in the same directory as the CreditPage component.
+
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
@@ -23,7 +25,11 @@ import {
 import Label from '../components/label'; // Asegúrate de tener un componente Label definido
 import Iconify from '../components/iconify'; 
 import Scrollbar from '../components/scrollbar';
-import { CreditListHead, CreditListToolbar } from '../sections/@dashboard/credit'; // Asegúrate de importar CreditListHead y CreditListToolbar correctamente.
+
+import { CreditListHead, CreditListToolbar,} from '../sections/@dashboard/credit'; 
+import CreditForm from '../sections/@dashboard/credit/CreditForm'; 
+import PaymentForm from '../sections/@dashboard/credit/PaymentForm';// Replace './CreditForm' with the actual path to your CreditForm component.
+// Asegúrate de importar CreditListHead y CreditListToolbar correctamente.
 import CREDITLIST from '../_mock/credit'; // Supongo que tienes un archivo con datos simulados de créditos.
 
 const TABLE_HEAD = [
@@ -95,7 +101,24 @@ export default function CreditPage() {
     }
     setSelected([]);
   };
+  const [isCreditFormOpen, setIsCreditFormOpen] = useState(false);
 
+  const openCreditForm = () => {
+    setIsCreditFormOpen(true);
+  };
+  
+  const closeCreditForm = () => {
+    setIsCreditFormOpen(false);
+  };
+  const [isPaymentFormOpen, setIsPaymentFormOpen] = useState(false);
+
+  const openPaymentForm = () => {
+    setIsPaymentFormOpen(true);
+  };
+
+  const closePaymentForm = () => {
+    setIsPaymentFormOpen(false);
+  };
   const handleClick = (event, applicantName) => {
     const selectedIndex = selected.indexOf(applicantName);
     let newSelected = [];
@@ -138,14 +161,22 @@ export default function CreditPage() {
       </Helmet>
 
       <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            Credit
-          </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Credit
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+  <Stack direction="row" alignItems="center" justifyContent="flex-end">
+          
+          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={openCreditForm}>
+          New Credit
           </Button>
+
+          </Stack> 
         </Stack>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+  <Stack direction="row" alignItems="center" justifyContent="flex-end">
+    <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={openPaymentForm}>
+      New Payment
+    </Button>
+  </Stack>
+</Stack>
 
         <Card>
           <CreditListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
@@ -183,6 +214,7 @@ export default function CreditPage() {
                         
     {   /*  aqui cambio en color aplication date este era el eror   */  }                       
                         <TableCell align="left">
+                            
                           <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
                         </TableCell>
                      
@@ -240,6 +272,60 @@ export default function CreditPage() {
           />
         </Card>
       </Container>
+
+
+      
+    {/* Conditional rendering of CreditForm */}
+    {isCreditFormOpen && (
+
+<div style={{
+  position: 'absolute',
+  zIndex: 1000,
+  top: '50%',   // Centra verticalmente en relación con el contenedor principal
+  left: '50%',  // Centra horizontalmente en relación con el contenedor principal
+  transform: 'translate(-50%, -50%)',  // Centra el contenido
+  width: '500px',  // Ajusta el ancho deseado
+  padding: '20px',  // Añade un espacio de relleno alrededor del formulario
+  backgroundColor: 'white',  // Fondo blanco
+  borderRadius: '8px',  // Bordes redondeados
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',  // Sombra ligera
+}}>
+    <CreditForm
+      onClose={closeCreditForm}
+      onCreditCreate={() => {
+        // Add logic to create a new credit here.
+        // After creating the credit, you can close the form by calling `closeCreditForm()`.
+      }}
+      sx={{ backgroundColor: 'white' }}
+    />
+  </div>
+)}
+ {/* Conditional rendering of PaymentForm */}
+ {isPaymentFormOpen && (
+        <div style={{
+          position: 'absolute',
+          zIndex: 1000,
+          top: '50%',   // Centra verticalmente en relación con el contenedor principal
+          left: '50%',  // Centra horizontalmente en relación con el contenedor principal
+          transform: 'translate(-50%, -50%)',  // Centra el contenido
+          width: '500px',  // Ajusta el ancho deseado
+          padding: '20px',  // Añade un espacio de relleno alrededor del formulario
+          backgroundColor: 'white',  // Fondo blanco
+          borderRadius: '8px',  // Bordes redondeados
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',  // Sombra ligera
+        }}>
+          <PaymentForm
+            onClose={closePaymentForm}
+            onPaymentCreate={() => {
+              // Agrega la lógica para crear un nuevo pago aquí.
+              // Después de crear el pago, puedes cerrar el formulario llamando a `closePaymentForm()`.
+            }}
+          />
+        </div>
+      )}
+
+
+
 
       <Popover
         open={Boolean(open)}

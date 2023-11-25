@@ -88,7 +88,7 @@ export default function LoginPage() {
               </Button>
 
               <Button fullWidth size="large" color="inherit" variant="outlined">
-                <Iconify icon="eva:twitter-fill" color="#3ECC1B" width={22} height={22} />
+                <Iconify icon="eva:twitter-fill" color="c" width={22} height={22} />
               </Button>
             </Stack>
 

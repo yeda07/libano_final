@@ -1,7 +1,7 @@
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 // routes
-import Router from './routes';
+import Router from './routes/routes';
 // theme
 import ThemeProvider from './theme';
 // components

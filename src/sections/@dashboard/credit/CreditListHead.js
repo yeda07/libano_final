@@ -1,13 +1,5 @@
 import PropTypes from 'prop-types';
-import {
-  Box,
-  Checkbox,
-  TableRow,
-  TableCell,
-  TableHead,
-  TableSortLabel,
-  TextField,
-} from '@mui/material';
+import { Box, Checkbox, TableRow, TableCell, TableHead, TableSortLabel, TextField } from '@mui/material';
 
 const visuallyHidden = {
   border: 0,
@@ -31,6 +23,8 @@ CreditListHead.propTypes = {
   onSelectAllClick: PropTypes.func,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
+  isAuthenticated: PropTypes.bool.isRequired,
+  isSuperUser: PropTypes.bool.isRequired,
 };
 
 export default function CreditListHead({
@@ -43,6 +37,8 @@ export default function CreditListHead({
   onSelectAllClick,
   filterName,
   onFilterName,
+  isAuthenticated,
+  isSuperUser,
 }) {
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -51,6 +47,11 @@ export default function CreditListHead({
   const handleFilterNameChange = (event) => {
     onFilterName(event.target.value);
   };
+
+  // Si el usuario no está autenticado o no es un superusuario, no muestra el componente
+  if (!isAuthenticated || !isSuperUser) {
+    return null;
+  }
 
   return (
     <TableHead>
@@ -76,7 +77,9 @@ export default function CreditListHead({
             >
               {headCell.label}
               {orderBy === headCell.id ? (
-                <Box sx={{ ...visuallyHidden }}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</Box>
+                <Box sx={{ ...visuallyHidden }}>
+                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                </Box>
               ) : null}
             </TableSortLabel>
           </TableCell>
