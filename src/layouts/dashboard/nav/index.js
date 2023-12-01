@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom'; // Cambiado de useHistory a useNavigate
 // @mui
 import { styled, alpha } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
@@ -8,14 +8,10 @@ import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/mater
 import account from '../../../_mock/account';
 // hooks
 import useResponsive from '../../../hooks/useResponsive';
-// components
 import Logo from '../../../components/logo';
 import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
-//
 import navConfig from './config';
-
-// ----------------------------------------------------------------------
 
 const NAV_WIDTH = 280;
 
@@ -27,8 +23,6 @@ const StyledAccount = styled('div')(({ theme }) => ({
   backgroundColor: alpha(theme.palette.grey[500], 0.12),
 }));
 
-// ----------------------------------------------------------------------
-
 Nav.propTypes = {
   openNav: PropTypes.bool,
   onCloseNav: PropTypes.func,
@@ -36,8 +30,9 @@ Nav.propTypes = {
 
 export default function Nav({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
-
+  const navigate = useNavigate(); // Cambiado de useHistory a useNavigate
   const isDesktop = useResponsive('up', 'lg');
+  const [isAuthenticated, setIsAuthenticated] = useState(true); 
 
   useEffect(() => {
     if (openNav) {
@@ -45,6 +40,13 @@ export default function Nav({ openNav, onCloseNav }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+
+  const handleLogout = () => {
+    // Realiza aquí la lógica de cierre de sesión
+    // Por ahora, simplemente redirigimos al usuario a la página de inicio de sesión
+    setIsAuthenticated(false);
+    navigate('/login'); // Cambiado de history.push a navigate
+  };
 
   const renderContent = (
     <Scrollbar
@@ -81,7 +83,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
       <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
         <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
-          <Button href="" target="_blank" variant="contained">
+          <Button variant="contained" onClick={handleLogout}>
             Cerrar Sesión
           </Button>
         </Stack>

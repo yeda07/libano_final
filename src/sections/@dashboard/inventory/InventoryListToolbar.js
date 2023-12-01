@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { styled, alpha } from '@mui/material/styles';
 import { Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment } from '@mui/material';
@@ -27,14 +26,27 @@ const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
   },
 }));
 
-CreditListToolbar.propTypes = {
+InventoryListToolbar.propTypes = {
   numSelected: PropTypes.number,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
-  onDelete: PropTypes.func,
+  onDelete: PropTypes.func, // Add prop to delete selected items.
+  isAuthenticated: PropTypes.bool.isRequired,
+  isSuperUser: PropTypes.bool.isRequired,
 };
 
-export default function CreditListToolbar({ numSelected, filterName, onFilterName, onDelete }) {
+export default function InventoryListToolbar({
+  numSelected,
+  filterName,
+  onFilterName,
+  onDelete,
+  isAuthenticated,
+  isSuperUser,
+}) {
+  if (!isAuthenticated || !isSuperUser) {
+    return null;
+  }
+
   return (
     <StyledRoot
       sx={{
@@ -52,7 +64,7 @@ export default function CreditListToolbar({ numSelected, filterName, onFilterNam
         <StyledSearch
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search credit..."
+          placeholder="Search item..."
           startAdornment={
             <InputAdornment position="start">
               <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />

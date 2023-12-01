@@ -1,9 +1,11 @@
-// ----------------------------------------------------------------------
-
 const account = {
-  displayName: 'Jaydon Frankie',
-  email: 'demo@minimals.cc',
-  photoURL: '/assets/images/avatars/avatar_default.jpg',
+  displayName: 'yeider',
+  email: 'yeidercortes2021@itp.edu.co',
+  photoURL: '/assets/images/avatars/avatar_9.jpg',
+
+  
 };
+
+
 
 export default account;
