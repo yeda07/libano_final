@@ -8,7 +8,8 @@ import useResponsive from '../hooks/useResponsive';
 import Logo from '../components/logo';
 import Iconify from '../components/iconify';
 // sections
-import { LoginForm } from '../sections/auth/login';
+
+import LoginForm from '../sections/auth/login/LoginForm';
 
 // ----------------------------------------------------------------------
 
@@ -61,7 +62,7 @@ export default function LoginPage() {
         {mdUp && (
           <StyledSection>
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Hola, ingresa a nuestra pagina
+              Hola bienvenidos , ingresa a nuestra pagina
             </Typography>
             <img src="/assets/illustrations/illustration_login.png" alt="login" />
           </StyledSection>
@@ -80,15 +81,15 @@ export default function LoginPage() {
 
             <Stack direction="row" spacing={2}>
               <Button fullWidth size="large" color="inherit" variant="outlined">
-                <Iconify icon="eva:google-fill" color="#4BD129" width={22} height={22} />
+                <Iconify icon="eva:google-fill" color="#d1294b" width={22} height={22} />
               </Button>
 
               <Button fullWidth size="large" color="inherit" variant="outlined">
-                <Iconify icon="eva:facebook-fill" color="#44DA1F" width={22} height={22} />
+                <Iconify icon="eva:facebook-fill" color="#0027ff" width={22} height={22} />
               </Button>
 
               <Button fullWidth size="large" color="inherit" variant="outlined">
-                <Iconify icon="eva:twitter-fill" color="c" width={22} height={22} />
+                <Iconify icon="eva:twitter-fill" color="#00efff" width={22} height={22} />
               </Button>
             </Stack>
 
