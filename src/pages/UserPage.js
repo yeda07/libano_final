@@ -1,48 +1,17 @@
+import React, { useState, useEffect } from 'react';
+import { Stack, Button, Container, IconButton, Popover, Paper, MenuItem, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
-import { useState } from 'react';
-// @mui
-import {
-  Card,
-  Table,
-  Stack,
-  Paper,
-  Avatar,
-  Button,
-  Popover,
-  Checkbox,
-  TableRow,
-  MenuItem,
-  TableBody,
-  TableCell,
-  Container,
-  Typography,
-  IconButton,
-  TableContainer,
-  TablePagination,
-} from '@mui/material';
-// components
-import Label from '../components/label';
+
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
-// sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
-// mock
-import USERLIST from '../_mock/user';
-
-// ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Nombre', alignRight: false },
-  { id: 'company', label: 'Empresa', alignRight: false },
-  { id: 'role', label: 'Rol', alignRight: false },
-  { id: 'isVerified', label: 'Verificado', alignRight: false },
-  { id: 'status', label: 'Estado', alignRight: false },
+  { id: 'username', label: 'Nombre de usuario', alignRight: false },
+  { id: 'email', label: 'Correo electrónico', alignRight: false },
   { id: '' },
 ];
-
-// ----------------------------------------------------------------------
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -68,25 +37,62 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.username.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function UserPage() {
+function UserListComponent() {
   const [open, setOpen] = useState(null);
-
   const [page, setPage] = useState(0);
-
   const [order, setOrder] = useState('asc');
-
   const [selected, setSelected] = useState([]);
-
-  const [orderBy, setOrderBy] = useState('name');
-
+  const [orderBy, setOrderBy] = useState('username');
   const [filterName, setFilterName] = useState('');
-
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [users, setUsers] = useState([]);
+  const [authenticatedUser, setAuthenticatedUser,obtenerIdUsuarioDesdeToken] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+  
+        if (!token) {
+          console.error('Access token not found in localStorage.');
+          return;
+        }
+  
+        const response = await fetch('https://tapiceria-7efd4dfba1d5.herokuapp.com/apiusers/', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        if (response.ok) {
+          const data = await response.json();
+
+          // Obtén el ID del usuario autenticado desde el token o de otra fuente si es necesario
+          const authenticatedUserId = obtenerIdUsuarioDesdeToken(token); // Reemplaza esto con tu lógica para obtener el ID del usuario autenticado
+
+          // Busca el usuario autenticado por su ID
+          const authenticatedUser = data.find(user => user.id === authenticatedUserId);
+
+          // Se establece el usuario autenticado
+          setAuthenticatedUser(authenticatedUser);
+          setUsers(data);
+        } else {
+          console.error('Error fetching user data from the API:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching user data from the API:', error);
+      }
+    };
+  
+    fetchUserData();
+  }, []);
+  
+  
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -104,18 +110,18 @@ export default function UserPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = users.map((n) => n.username);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, username) => {
+    const selectedIndex = selected.indexOf(username);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, username);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -140,9 +146,9 @@ export default function UserPage() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
 
@@ -155,14 +161,14 @@ export default function UserPage() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Usuario
+            Usuarios
           </Typography>
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
             Nuevo Usuario
           </Button>
         </Stack>
 
-        <Card>
+        <Paper>
           <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
@@ -172,40 +178,29 @@ export default function UserPage() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={users.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                    const selectedUser = selected.indexOf(name) !== -1;
+                    const { id, username, email } = row;
+                    const selectedUser = selected.indexOf(username) !== -1;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
+                          <IconButton size="small" onClick={(event) => handleClick(event, username)}>
+                            <Iconify icon="eva:checkmark-circle-2-fill" />
+                          </IconButton>
                         </TableCell>
 
                         <TableCell component="th" scope="row" padding="none">
-                          <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={avatarUrl} />
-                            <Typography variant="subtitle2" noWrap>
-                              {name}
-                            </Typography>
-                          </Stack>
+                          {username}
                         </TableCell>
 
-                        <TableCell align="left">{company}</TableCell>
-
-                        <TableCell align="left">{role}</TableCell>
-
-                        <TableCell align="left">{isVerified ? 'Si' : 'No'}</TableCell>
-
-                        <TableCell align="left">
-                          <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
-                        </TableCell>
+                        <TableCell align="left">{email}</TableCell>
 
                         <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
@@ -217,7 +212,7 @@ export default function UserPage() {
                   })}
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
+                      <TableCell colSpan={3} />
                     </TableRow>
                   )}
                 </TableBody>
@@ -225,20 +220,20 @@ export default function UserPage() {
                 {isNotFound && (
                   <TableBody>
                     <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                      <TableCell align="center" colSpan={3} sx={{ py: 3 }}>
                         <Paper
                           sx={{
                             textAlign: 'center',
                           }}
                         >
                           <Typography variant="h6" paragraph>
-                            Not found
+                            No encontrado
                           </Typography>
 
                           <Typography variant="body2">
-                            No results found for &nbsp;
+                            No se encontraron resultados para &nbsp;
                             <strong>&quot;{filterName}&quot;</strong>.
-                            <br /> Try checking for typos or using complete words.
+                            <br /> Intenta revisar si hay errores tipográficos o utiliza palabras completas.
                           </Typography>
                         </Paper>
                       </TableCell>
@@ -252,13 +247,13 @@ export default function UserPage() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={users.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-        </Card>
+        </Paper>
       </Container>
 
       <Popover
@@ -292,3 +287,5 @@ export default function UserPage() {
     </>
   );
 }
+
+export default UserListComponent;

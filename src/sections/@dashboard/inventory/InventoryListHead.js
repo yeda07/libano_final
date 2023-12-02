@@ -13,7 +13,7 @@ const visuallyHidden = {
   clip: 'rect(0 0 0 0)',
 };
 
-CreditListHead.propTypes = {
+InventoryListHead.propTypes = {
   order: PropTypes.oneOf(['asc', 'desc']),
   orderBy: PropTypes.string,
   rowCount: PropTypes.number,
@@ -27,7 +27,7 @@ CreditListHead.propTypes = {
   isSuperUser: PropTypes.bool.isRequired,
 };
 
-export default function CreditListHead({
+export default function InventoryListHead({
   order,
   orderBy,
   rowCount,
@@ -48,7 +48,7 @@ export default function CreditListHead({
     onFilterName(event.target.value);
   };
 
-  // Si el usuario no está autenticado o no es un superusuario, no muestra el componente
+  // If the user is not authenticated or not a superuser, do not render the component
   if (!isAuthenticated || !isSuperUser) {
     return null;
   }
@@ -90,7 +90,7 @@ export default function CreditListHead({
             size="small"
             value={filterName}
             onChange={handleFilterNameChange}
-            placeholder="Filter by Name"
+            placeholder="Filter by Item Name"
             variant="outlined"
           />
         </TableCell>

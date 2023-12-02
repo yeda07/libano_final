@@ -1,113 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
 import {
   Card,
   Table,
   Stack,
   Paper,
   Button,
-  Popover,
-  Checkbox,
   TableRow,
-  MenuItem,
   TableBody,
   TableCell,
   Container,
-  Typography,
-  IconButton,
   TableContainer,
   TablePagination,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
 } from '@mui/material';
-import Label from '../components/label'; // Asegúrate de tener un componente Label definido
-import Iconify from '../components/iconify'; 
-import Scrollbar from '../components/scrollbar';
-import { CreditListHead, CreditListToolbar } from '../sections/@dashboard/credit'; // Asegúrate de importar CreditListHead y CreditListToolbar correctamente.
-import CREDITLIST from '../_mock/credit'; // Supongo que tienes un archivo con datos simulados de créditos.
+import Iconify from '../components/iconify';
+import { CreditListHead } from '../sections/@dashboard/credit';
 
-const TABLE_HEAD = [
-  { id: 'applicantName', label: 'Applicant Name', alignRight: false },
-  { id: 'amount', label: 'Amount', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: 'applicationDate', label: 'Application Date', alignRight: false },
-  { id: '' },
-];
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function applySortFilter(array, comparator, query) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  if (query) {
-    return filter(array, (_credit) => _credit.applicantName.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-  }
-  return stabilizedThis.map((el) => el[0]);
-}
-
-export default function CreditPage() {
-  const [open, setOpen] = useState(null);
+const CreditPage = () => {
+  const [creditList, setCreditList] = useState([]);
   const [page, setPage] = useState(0);
-  const [order, setOrder] = useState('asc');
-  const [selected, setSelected] = useState([]);
-  const [orderBy, setOrderBy] = useState('applicantName');
-  const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const handleOpenMenu = (event) => {
-    setOpen(event.currentTarget);
-  };
-
-  const handleCloseMenu = () => {
-    setOpen(null);
-  };
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('id');
+  const [openDialog, setOpenDialog] = useState(false);
+  const [newCreditData, setNewCreditData] = useState({
+    total_credito: 0,
+    monto_inicial: 0,
+    fecha_credito: '',
+    usuario: 0, // Puedes ajustar esto según la lógica de tu aplicación
+  });
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = CREDITLIST.map((n) => n.applicantName);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, applicantName) => {
-    const selectedIndex = selected.indexOf(applicantName);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, applicantName);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-    setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -119,16 +50,68 @@ export default function CreditPage() {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-  const handleFilterByName = (event) => {
-    setPage(0);
-    setFilterName(event.target.value);
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - creditList.length) : 0;
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - CREDITLIST.length) : 0;
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
 
-  const filteredCredits = applySortFilter(CREDITLIST, getComparator(order, orderBy), filterName);
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setNewCreditData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
-  const isNotFound = !filteredCredits.length && !!filterName;
+  const createNewCredit = async () => {
+    try {
+      const response = await fetch('https://tapiceria-7efd4dfba1d5.herokuapp.com/apicreditos/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newCreditData),
+      });
+
+      if (response.ok) {
+        // Si la creación fue exitosa, actualiza la lista de créditos
+        fetchCreditData();
+        handleCloseDialog();
+      } else {
+        console.error('Error creating new credit:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error creating new credit:', error);
+    }
+  };
+
+  const fetchCreditData = async () => {
+    try {
+      const response = await fetch('https://tapiceria-7efd4dfba1d5.herokuapp.com/apicreditos/');
+      const data = await response.json();
+
+      const mappedData = data.map((apiCredit) => ({
+        id: apiCredit.id,
+        applicantName: `Usuario ${apiCredit.usuario}`,
+        amount: apiCredit.monto_inicial,
+        status: 'disponible',
+        applicationDate: apiCredit.fecha_credito,
+      }));
+
+      setCreditList(mappedData);
+    } catch (error) {
+      console.error('Error fetching credit data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCreditData();
+  }, []);
 
   return (
     <>
@@ -138,100 +121,46 @@ export default function CreditPage() {
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            Credit
-          </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Credit
-          </Button>
+          <Stack direction="row" alignItems="center" justifyContent="flex-end">
+            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpenDialog}>
+              New Credit
+            </Button>
+          </Stack>
         </Stack>
 
         <Card>
-          <CreditListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
-
-          <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
-              <Table>
-                <CreditListHead
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={CREDITLIST.length}
-                  numSelected={selected.length}
-                  onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
-                />
-                <TableBody>
-                  {filteredCredits.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, applicantName, amount, status, applicationDate } = row;
-                    const selectedCredit = selected.indexOf(applicantName) !== -1;
-
-                    return (
-                      <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedCredit}>
-                        <TableCell padding="checkbox">
-                          <Checkbox checked={selectedCredit} onChange={(event) => handleClick(event, applicantName)} />
-                        </TableCell>
-
-                        <TableCell component="th" scope="row" padding="none">
-                          {applicantName}
-                        </TableCell>
-
-                        <TableCell align="left">{amount}</TableCell>
-
-                        <TableCell align="left">{applicationDate}</TableCell>
-
-                        <TableCell align="left">
-                          <Label color={(status === 'rejected' && 'error') || (status === 'approved' && 'success')}>
-                            {sentenceCase(status)}
-                          </Label>
-                        </TableCell>
-
-                        <TableCell align="right">
-                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
-                            <Iconify icon={'eva:more-vertical-fill'} />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
+          <TableContainer component={Paper}>
+            <Table>
+              <CreditListHead
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+                rowCount={creditList.length}
+              />
+              <TableBody>
+                {creditList
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((credit) => (
+                    <TableRow key={credit.id}>
+                      <TableCell>{credit.applicantName}</TableCell>
+                      <TableCell>{credit.amount}</TableCell>
+                      <TableCell>{credit.status}</TableCell>
+                      <TableCell>{credit.applicationDate}</TableCell>
                     </TableRow>
-                  )}
-                </TableBody>
-
-                {isNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <Paper
-                          sx={{
-                            textAlign: 'center',
-                          }}
-                        >
-                          <Typography variant="h6" paragraph>
-                            Not found
-                          </Typography>
-
-                          <Typography variant="body2">
-                            No results found for &nbsp;
-                            <strong>&quot;{filterName}&quot;</strong>.
-                            <br /> Try checking for typos or using complete words.
-                          </Typography>
-                        </Paper>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
+                  ))}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={4} />
+                  </TableRow>
                 )}
-              </Table>
-            </TableContainer>
-          </Scrollbar>
+              </TableBody>
+            </Table>
+          </TableContainer>
 
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={CREDITLIST.length}
+            count={creditList.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -240,34 +169,61 @@ export default function CreditPage() {
         </Card>
       </Container>
 
-      <Popover
-        open={Boolean(open)}
-        anchorEl={open}
-        onClose={handleCloseMenu}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        PaperProps={{
-          sx: {
-            p: 1,
-            width: 140,
-            '& .MuiMenuItem-root': {
-              px: 1,
-              typography: 'body2',
-              borderRadius: 0.75,
-            },
-          },
-        }}
-      >
-        <MenuItem>
-          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          Edit
-        </MenuItem>
+      {/* Dialog para el formulario de nuevo crédito */}
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>New Credit</DialogTitle>
+        <DialogContent>
 
-        <MenuItem sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
-          Delete
-        </MenuItem>
-      </Popover>
+      
+          <TextField
+            label="Total del Credito"
+            type="number"
+            name="total_credito"
+            value={newCreditData.total_credito}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="monto inicial"
+            type="number"
+            name="monto_inicial"
+            value={newCreditData.monto_inicial}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="fecha de credito"
+            type="date"
+            name="fecha_credito"
+            value={newCreditData.fecha_credito}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
+
+          <TextField
+            label="usuario"
+            type="number"
+            name="usuario"
+            value={newCreditData.usuario}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={createNewCredit} color="primary">
+            Create
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
-}
+};
+
+export default CreditPage;

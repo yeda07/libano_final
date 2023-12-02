@@ -22,15 +22,26 @@ const navConfig = [
     icon: icon('ic_cart'),
   },
   {
+    title: 'inventory',
+    path: '/dashboard/inventory',
+    icon: icon('ic_inventory'),
+  },
+
+  {
+    title: 'credit',
+    path: '/dashboard/credit',
+    icon: icon('ic_credit'),
+  },
+
+  {
     title: 'blog',
     path: '/dashboard/blog',
     icon: icon('ic_blog'),
   },
-  {
-    title: 'pages login',
-    path: '/login',
-    icon: icon('ic_lock'),
-  },
+ 
+  
+ 
+
   {
     title: 'No se ha encontrado',
     path: '/404',
