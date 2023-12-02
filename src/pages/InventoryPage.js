@@ -12,6 +12,11 @@ import {
   Container,
   TableContainer,
   TablePagination,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
 } from '@mui/material';
 import Iconify from '../components/iconify';
 import { InventoryListHead } from '../sections/@dashboard/inventory';
@@ -22,6 +27,13 @@ const InventoryPage = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('id');
+  const [openDialog, setOpenDialog] = useState(false);
+  const [newItemData, setNewItemData] = useState({
+    id: '',
+    productName: '',
+    quantity: '',
+    price: '',
+  });
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -39,6 +51,31 @@ const InventoryPage = () => {
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - inventoryList.length) : 0;
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setNewItemData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleAddItem = () => {
+    // Aquí puedes manejar la lógica para agregar el nuevo ítem al inventario
+    // Puedes realizar una solicitud para guardar el nuevo ítem en tu API, por ejemplo
+
+    // Después de agregar el ítem, actualiza la lista y cierra el diálogo
+    setInventoryList((prevList) => [...prevList, newItemData]);
+    handleCloseDialog();
+  };
 
   useEffect(() => {
     const fetchInventoryData = async () => {
@@ -73,7 +110,7 @@ const InventoryPage = () => {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Stack direction="row" alignItems="center" justifyContent="flex-end">
-            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpenDialog}>
               Add Item
             </Button>
           </Stack>
@@ -120,9 +157,59 @@ const InventoryPage = () => {
           />
         </Card>
       </Container>
+
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Add New Item</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="ID"
+            type="text"
+            name="id"
+            value={newItemData.id}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Product Name"
+            type="text"
+            name="productName"
+            value={newItemData.productName}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Quantity"
+            type="number"
+            name="quantity"
+            value={newItemData.quantity}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Price"
+            type="number"
+            name="price"
+            value={newItemData.price}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
+          {/* Agrega más campos según sea necesario */}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleAddItem} color="primary">
+            Add Item
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
 
-// ../sections/@dashboard/inventory
 export default InventoryPage;
