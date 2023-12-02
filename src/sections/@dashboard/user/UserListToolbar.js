@@ -27,14 +27,14 @@ const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
   },
 }));
 
-CreditListToolbar.propTypes = {
+UserListToolbar.propTypes = {
   numSelected: PropTypes.number,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   onDelete: PropTypes.func,
 };
 
-export default function CreditListToolbar({ numSelected, filterName, onFilterName, onDelete }) {
+export default function UserListToolbar({ numSelected, filterName, onFilterName, onDelete }) {
   return (
     <StyledRoot
       sx={{
@@ -52,7 +52,7 @@ export default function CreditListToolbar({ numSelected, filterName, onFilterNam
         <StyledSearch
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search credit..."
+          placeholder="Search user..."
           startAdornment={
             <InputAdornment position="start">
               <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />

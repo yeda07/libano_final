@@ -1,3 +1,4 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 import { styled, alpha } from '@mui/material/styles';
 import { Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment } from '@mui/material';
@@ -30,23 +31,10 @@ CreditListToolbar.propTypes = {
   numSelected: PropTypes.number,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
-  onDelete: PropTypes.func, // Agregamos prop para eliminar créditos seleccionados.
-  isAuthenticated: PropTypes.bool.isRequired,
-  isSuperUser: PropTypes.bool.isRequired,
+  onDelete: PropTypes.func,
 };
 
-export default function CreditListToolbar({
-  numSelected,
-  filterName,
-  onFilterName,
-  onDelete,
-  isAuthenticated,
-  isSuperUser,
-}) {
-  if (!isAuthenticated || !isSuperUser) {
-    return null;
-  }
-
+export default function CreditListToolbar({ numSelected, filterName, onFilterName, onDelete }) {
   return (
     <StyledRoot
       sx={{
@@ -64,7 +52,7 @@ export default function CreditListToolbar({
         <StyledSearch
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search credit..."
+          placeholder="buscar credito..."
           startAdornment={
             <InputAdornment position="start">
               <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />

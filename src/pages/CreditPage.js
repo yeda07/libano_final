@@ -17,12 +17,14 @@ import {
   DialogContent,
   TextField,
   DialogActions,
+  IconButton,
 } from '@mui/material';
 import Iconify from '../components/iconify';
-import { CreditListHead } from '../sections/@dashboard/credit';
+import { CreditListHead, CreditListToolbar } from '../sections/@dashboard/credit';
 
 const CreditPage = () => {
   const [creditList, setCreditList] = useState([]);
+  const [filteredCreditList, setFilteredCreditList] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [order, setOrder] = useState('asc');
@@ -32,8 +34,10 @@ const CreditPage = () => {
     total_credito: 0,
     monto_inicial: 0,
     fecha_credito: '',
-    usuario: 0, // Puedes ajustar esto según la lógica de tu aplicación
+    usuario: 0,
   });
+
+  const [filterName, setFilterName] = useState('');
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -49,8 +53,6 @@ const CreditPage = () => {
     setPage(0);
     setRowsPerPage(parseInt(event.target.value, 10));
   };
-
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - creditList.length) : 0;
 
   const handleOpenDialog = () => {
     setOpenDialog(true);
@@ -68,6 +70,16 @@ const CreditPage = () => {
     }));
   };
 
+  const handleFilterNameChange = (event) => {
+    const value = event.target.value;
+    setFilterName(value);
+
+    const filteredCredits = creditList.filter(
+      (credit) => credit.applicantName.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredCreditList(filteredCredits);
+  };
+
   const createNewCredit = async () => {
     try {
       const response = await fetch('https://tapiceria-7efd4dfba1d5.herokuapp.com/apicreditos/', {
@@ -79,7 +91,6 @@ const CreditPage = () => {
       });
 
       if (response.ok) {
-        // Si la creación fue exitosa, actualiza la lista de créditos
         fetchCreditData();
         handleCloseDialog();
       } else {
@@ -90,6 +101,20 @@ const CreditPage = () => {
     }
   };
 
+  const deleteCredit = async (creditId) => {
+    try {
+      const response = await fetch(`https://tapiceria-7efd4dfba1d5.herokuapp.com/apicreditos/${creditId}/`, {
+        method: 'DELETE',
+      });
+  
+      if (response.ok) {
+        fetchCreditData();
+      } else {
+        console.error('Error deleting credit:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error deleting credit:', error);
+    }};
   const fetchCreditData = async () => {
     try {
       const response = await fetch('https://tapiceria-7efd4dfba1d5.herokuapp.com/apicreditos/');
@@ -104,6 +129,11 @@ const CreditPage = () => {
       }));
 
       setCreditList(mappedData);
+
+      const filteredCredits = mappedData.filter(
+        (credit) => credit.applicantName.toLowerCase().includes(filterName.toLowerCase())
+      );
+      setFilteredCreditList(filteredCredits);
     } catch (error) {
       console.error('Error fetching credit data:', error);
     }
@@ -111,7 +141,7 @@ const CreditPage = () => {
 
   useEffect(() => {
     fetchCreditData();
-  }, []);
+  }, [filterName]);
 
   return (
     <>
@@ -129,16 +159,22 @@ const CreditPage = () => {
         </Stack>
 
         <Card>
+          <CreditListToolbar
+            filterName={filterName}
+            onFilterName={handleFilterNameChange}
+            numSelected={0}
+            onDelete={() => {}}
+          />
           <TableContainer component={Paper}>
             <Table>
               <CreditListHead
                 order={order}
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
-                rowCount={creditList.length}
+                rowCount={filteredCreditList.length}
               />
               <TableBody>
-                {creditList
+                {filteredCreditList
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((credit) => (
                     <TableRow key={credit.id}>
@@ -146,13 +182,30 @@ const CreditPage = () => {
                       <TableCell>{credit.amount}</TableCell>
                       <TableCell>{credit.status}</TableCell>
                       <TableCell>{credit.applicationDate}</TableCell>
+                      <TableCell>
+                        <IconButton
+                          color="primary"
+                          onClick={() => {
+                            // Lógica para editar el crédito
+                            console.log('Edit credit with id:', credit.id);
+                          }}
+                        >
+                          <Iconify icon={'eva:edit-fill'} />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell>
+                        <IconButton
+                          color="error"
+                          onClick={() => {
+                            // Lógica para eliminar el crédito
+                            deleteCredit(credit.id); // Llama a la función deleteCredit con el ID del crédito
+                          }}
+                        >
+                          <Iconify icon={'eva:trash-2-outline'} />
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
                   ))}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={4} />
-                  </TableRow>
-                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -160,7 +213,7 @@ const CreditPage = () => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={creditList.length}
+            count={filteredCreditList.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -169,12 +222,9 @@ const CreditPage = () => {
         </Card>
       </Container>
 
-      {/* Dialog para el formulario de nuevo crédito */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>New Credit</DialogTitle>
         <DialogContent>
-
-      
           <TextField
             label="Total del Credito"
             type="number"
@@ -202,7 +252,6 @@ const CreditPage = () => {
             fullWidth
             margin="normal"
           />
-
           <TextField
             label="usuario"
             type="number"

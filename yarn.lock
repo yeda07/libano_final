@@ -3620,7 +3620,15 @@ css-select@^4.1.3:
     domutils "^2.8.0"
     nth-check "^2.0.1"
 
-css-tree@^1.1.2, css-tree@^1.1.3:
+css-tree@^1.1.2:
+  version "1.1.3"
+  resolved "https://registry.npmjs.org/css-tree/-/css-tree-1.1.3.tgz"
+  integrity sha512-tRpdppF7TRazZrjJ6v3stzv93qxRcSsFmW6cX0Zm2NVKpxE1WV1HblnghVv9TreireHkqI/VDEsfolRF1p6y7Q==
+  dependencies:
+    mdn-data "2.0.14"
+    source-map "^0.6.1"
+
+css-tree@^1.1.3:
   version "1.1.3"
   resolved "https://registry.npmjs.org/css-tree/-/css-tree-1.1.3.tgz"
   integrity sha512-tRpdppF7TRazZrjJ6v3stzv93qxRcSsFmW6cX0Zm2NVKpxE1WV1HblnghVv9TreireHkqI/VDEsfolRF1p6y7Q==
@@ -6302,7 +6310,8 @@ levn@~0.3.0:
 
 "libano-OpenApi@github:yeda07/libano-OpenApi":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/yeda07/libano-OpenApi.git#869ad0b91a4574b7841b91e0677b44edcc2c10ed"
+  resolved "git+ssh://git@github.com/yeda07/libano-OpenApi.git"
+  integrity sha512-GD98CYkZOAEWjJF0eq5ekQMGmhLI/a166RPSg7Dw3F8ZyOv2s9xt0joSEZHdv6IYq3J80+lsCnsCTgRiIUBgKQ==
   dependencies:
     es6-promise "^4.2.4"
     url-parse "^1.4.3"
