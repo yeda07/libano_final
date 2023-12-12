@@ -5,21 +5,12 @@ import {
   Stack,
   Typography,
   Button,
-  IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
+
   Paper,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import mockProducts from '../_mock/products';
 import AddProductForm from '../sections/@dashboard/products/AddProductForm';
-import Iconify from '../components/iconify';
+
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
@@ -82,6 +73,7 @@ const ProductsPage = () => {
     // Aquí puedes implementar la lógica para agregar el producto al carrito de compras
     console.log(`Agregar producto al carrito: ${product.descripcion}`);
   };
+  
 
   return (
     <Container>
@@ -91,50 +83,23 @@ const ProductsPage = () => {
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">List Product</Typography>
+        
         <Button variant="contained" startIcon={<EditIcon />} onClick={handleOpenAddForm}>
           New Product
         </Button>
       </Stack>
 
       {/* Tabla de productos */}
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Description</TableCell>
-              <TableCell>Manufacturing Date</TableCell>
-              <TableCell>Cost Price</TableCell>
-              <TableCell>Selling Price</TableCell>
-              <TableCell>Product Type</TableCell>
-              <TableCell>Material Type</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {products.map((product) => (
-              <TableRow key={product._id}>
-                <TableCell>{product.descripcion}</TableCell>
-                <TableCell>{product.fecha_fabricacion}</TableCell>
-                <TableCell>${product.precio_costo}</TableCell>
-                <TableCell>${product.precio_venta}</TableCell>
-                <TableCell>{product.tipoProducto}</TableCell>
-                <TableCell>{product.tipoMaterial}</TableCell>
-                <TableCell>
-                  <IconButton onClick={() => handleOpenEditForm(product)} color="primary" aria-label="Edit">
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton onClick={() => handleDeleteProduct(product._id)} color="error" aria-label="Delete">
-                    <DeleteIcon />
-                  </IconButton>
-                  <IconButton onClick={() => handleAddToCart(product)} color="primary" aria-label="Add to Cart">
-                    <ShoppingCartIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Stack direction="row" spacing={2} mt={4}>
+        {products.map((product) => (
+          <Paper key={product._id} elevation={3} style={{ padding: '20px', width: '300px' }}>
+            <img src={product.imagen} alt={product.descripcion} style={{ width: '100%', height: '290px', objectFit: 'cover' }} />
+            <Typography variant="h6" style={{ marginTop: '10px' }}>{product.descripcion}</Typography>
+            <Typography variant="body1" color="textSecondary">${product.precio_venta}</Typography>
+            
+          </Paper>
+        ))}
+      </Stack>
 
       {/* Formulario para agregar/editar productos */}
       {isAddFormOpen && (

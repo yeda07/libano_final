@@ -13,7 +13,7 @@ import DashboardAppPage from '../pages/DashboardAppPage';
 import CreditPage from '../pages/CreditPage';
 import InventoryPage from '../pages/InventoryPage'; // or .jsx, or the correct extension
 import Page404 from '../pages/Page404';
-
+import SalesPage from '../pages/SalesPage';
 
 
 
@@ -70,6 +70,7 @@ export default function Router() {
         { path: 'blog', element: <BlogPage /> },
         { path: 'credit', element: <CreditPage /> },
         { path: 'inventory', element: <InventoryPage /> },
+        { path: 'sale', element: <SalesPage/> },
       ],
     },
     {

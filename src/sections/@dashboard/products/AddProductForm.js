@@ -1,6 +1,7 @@
 // AddProductForm.js
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import PropTypes from 'prop-types'; // Importa PropTypes
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
 
 const AddProductForm = ({ onClose, initialProduct, setProducts }) => {
@@ -44,34 +45,74 @@ const AddProductForm = ({ onClose, initialProduct, setProducts }) => {
     }));
   };
 
-  const onSubmit = async (data) => {
+  const createNewProduct = async (data) => {
     try {
-      const url = 'https://tapiceria-7efd4dfba1d5.herokuapp.com/apiproductos/';
-      const method = initialProduct ? 'PUT' : 'POST';
-
-      const response = await fetch(url, {
-        method,
+      const response = await fetch('https://tapiceria-7efd4dfba1d5.herokuapp.com/apiproductos/', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer tu_token', // Reemplaza con tu token de autenticación
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          descripcion: data.descripcion || '',
+          fecha_fabricacion: data.fecha_fabricacion || '',
+          precio_costo: parseFloat(data.precio_costo) || 0,
+          precio_venta: parseFloat(data.precio_venta) || 0,
+          tipoProducto: parseInt(data.tipoProducto, 10) || 0, // Añadido el parámetro radix
+          tipoMaterial: parseInt(data.tipoMaterial, 10) || 0, // Añadido el parámetro radix
+        }),
       });
-
+  
       if (response.ok) {
-        console.log(`Producto ${initialProduct ? 'editado' : 'agregado'} con éxito`);
-        // Recarga la lista de productos después de agregar/editar uno
-        const updatedProducts = await fetch('https://tapiceria-7efd4dfba1d5.herokuapp.com/apiproductos/')
-          .then(response => response.json());
-        setProducts(updatedProducts);
+        console.log('Producto creado con éxito');
       } else {
-        console.error('Error en la respuesta de la API:', response.status, response.statusText);
+        console.error('Error al crear el producto:', response.status, response.statusText);
       }
     } catch (error) {
       console.error('Error al realizar la solicitud:', error);
     }
-
-    onClose();
   };
+  
+  
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+ 
+    // Lee el contenido del archivo y lo convierte en una URL de datos
+    const reader = new FileReader();
+    reader.onloadend = () => {
+       setProductData((prevData) => ({
+          ...prevData,
+          imagen: reader.result,
+       }));
+    };
+ 
+    if (file) {
+       reader.readAsDataURL(file);
+    }
+ };
+
+ const onSubmit = async (data) => {
+  try {
+    console.log('1. Antes de createNewProduct');
+    await createNewProduct(data);
+    console.log('2. Después de createNewProduct');
+
+    // Aquí puedes agregar más logs o lógica adicional si es necesario
+
+    // Después de crear el producto con éxito, obtén la lista de productos actualizada
+    console.log('3. Después de createNewProduct - Obtener la lista de productos actualizada');
+    const updatedProducts = await fetch('https://tapiceria-7efd4dfba1d5.herokuapp.com/apiproductos/')
+      .then((response) => response.json());
+    console.log('4. Después de obtener la lista de productos actualizada:', updatedProducts);
+
+    // Actualiza el estado de products con la lista actualizada
+    setProducts(updatedProducts);
+  } catch (error) {
+    console.error('Error al crear un nuevo producto:', error);
+  }
+
+  onClose(); // Cierra el formulario después de enviar la información
+};
 
 
   return (
@@ -92,12 +133,20 @@ const AddProductForm = ({ onClose, initialProduct, setProducts }) => {
             onChange={(e) => handleChange('descripcion', e.target.value)}
           />
           <TextField
-            {...register('fecha_fabricacion')}
-            label="Fecha de Fabricación"
+            type="file" // Cambia el tipo a "file" para permitir la selección de archivos
+            label="Imagen" /* Cambiado de "Imagen URL" a "Imagen" */
             fullWidth
             margin="normal"
+            onChange={(e) => handleFileChange(e)} /* Nueva función para manejar el cambio de archivo */
+          />
+          <TextField
+            label=""
+            type="date"
+            name="fecha fabricacion"
             value={productData.fecha_fabricacion}
             onChange={(e) => handleChange('fecha_fabricacion', e.target.value)}
+            fullWidth
+            margin="normal"
           />
           <TextField
             {...register('precio_costo')}
@@ -115,34 +164,24 @@ const AddProductForm = ({ onClose, initialProduct, setProducts }) => {
             value={productData.precio_venta}
             onChange={(e) => handleChange('precio_venta', e.target.value)}
           />
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Tipo de Producto</InputLabel>
-            <Select
-              {...register('tipoProducto')}
-              value={productData.tipoProducto}
-              onChange={(e) => handleChange('tipoProducto', e.target.value)}
-            >
-              {tiposProductos.map((tipo) => (
-                <MenuItem key={tipo._id} value={tipo.nombre}>
-                  {tipo.nombre}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Tipo de Material</InputLabel>
-            <Select
-              {...register('tipoMaterial')}
-              value={productData.tipoMaterial}
-              onChange={(e) => handleChange('tipoMaterial', e.target.value)}
-            >
-              {tiposMateriales.map((tipo) => (
-                <MenuItem key={tipo._id} value={tipo.nombre}>
-                  {tipo.nombre}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <TextField
+            {...register('tipoProducto')}
+            label="Tipo de Producto"
+            fullWidth
+            margin="normal"
+            type="number"  // Cambia el tipo a "number" para permitir solo números
+            value={productData.tipoProducto}
+            onChange={(e) => handleChange('tipoProducto', e.target.value)}
+          />
+          <TextField
+            {...register('tipoMaterial')}
+            label="Tipo de Material"
+            fullWidth
+            margin="normal"
+            type="number"  // Cambia el tipo a "number" para permitir solo números
+            value={productData.tipoMaterial}
+            onChange={(e) => handleChange('tipoMaterial', e.target.value)}
+          />
           <DialogActions>
             <Button onClick={onClose}>Cancelar</Button>
             <Button type="submit" variant="contained" color="primary">
@@ -153,6 +192,16 @@ const AddProductForm = ({ onClose, initialProduct, setProducts }) => {
       </DialogContent>
     </Dialog>
   );
+};
+
+AddProductForm.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  initialProduct: PropTypes.shape({
+    tipoProducto: PropTypes.string,
+    tipoMaterial: PropTypes.string,
+    // Añade otras propiedades según sea necesario
+  }),
+  setProducts: PropTypes.func.isRequired,
 };
 
 export default AddProductForm;
