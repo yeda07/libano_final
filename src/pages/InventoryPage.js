@@ -29,7 +29,6 @@ import {
 } from '@mui/material';
 
 
-
 const API_URLS = {
   existenciasEspumillas: 'https://tapiceria-7efd4dfba1d5.herokuapp.com/apiexistencias_espumillas/',
   existenciasMateriales: 'https://tapiceria-7efd4dfba1d5.herokuapp.com/apiexistencias_materiales/',
