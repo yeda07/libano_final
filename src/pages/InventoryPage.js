@@ -28,6 +28,8 @@ import {
   Typography,
 } from '@mui/material';
 
+import Iconify from '../components/iconify';
+
 
 const API_URLS = {
   existenciasEspumillas: 'https://tapiceria-7efd4dfba1d5.herokuapp.com/apiexistencias_espumillas/',
@@ -36,7 +38,8 @@ const API_URLS = {
   existenciasTelasColores: 'https://tapiceria-7efd4dfba1d5.herokuapp.com/apiexistencias_telas_colores/',
   tiposEspumillas: 'https://tapiceria-7efd4dfba1d5.herokuapp.com/apitipos_espumillas/',
   tiposMateriales: 'https://tapiceria-7efd4dfba1d5.herokuapp.com/apitipos_materiales/',
-  telasColores: 'https://tapiceria-7efd4dfba1d5.herokuapp.com/apitelas_colores/',
+  tiposTelas: 'https://tapiceria-7efd4dfba1d5.herokuapp.com/apitiposTelas/',
+  colores: 'https://tapiceria-7efd4dfba1d5.herokuapp.com/apicolores/',
   productos: 'https://tapiceria-7efd4dfba1d5.herokuapp.com/apiproductos/',
   comprasTelasColores: 'https://tapiceria-7efd4dfba1d5.herokuapp.com/apicompras_telas_colores/',
   comprasTiposEspumillas: 'https://tapiceria-7efd4dfba1d5.herokuapp.com/apicompras_tipos_espumillas/',
@@ -64,7 +67,11 @@ const InventoryPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
- 
+  const [existenciasEspumillasList, setExistenciasEspumillasList] = useState([]);
+  const [existenciasMaterialesList, setExistenciasMaterialesList] = useState([]);
+  const [existenciasProductosList, setExistenciasProductosList] = useState([]);
+  const [existenciasTelasColoresList, setExistenciasTelasColoresList] = useState([]);
+  const [inventoryExistenciasData, setInventoryExistenciasData] = useState([]);
 
   const [selectedProductType, setSelectedProductType] = useState('');
   const [productTypeData, setProductTypeData] = useState([]);
@@ -206,7 +213,7 @@ const InventoryPage = () => {
     try {
       setLoading(true);
   
-      const mapping = itemTypeMappingsCompras[newItemData.itemType]; // Cambiado a itemTypeMappings
+      const mapping = itemTypeMappingsCompras[newItemData.itemType];
   
       if (!mapping) {
         console.error('Tipo de item no soportado:', newItemData.itemType);
@@ -215,16 +222,27 @@ const InventoryPage = () => {
   
       const { apiURL, requestBody } = mapping;
   
-      // Agrega los campos compra_id y precio al requestBody
       const requestBodyData = {
         ...requestBody(newItemData),
-        compra_id: 1,
+        compra: 1,
         precio: 1,
+        cantidad: parseInt(newItemData.cantidad, 10),
       };
   
       console.log('Cuerpo de la solicitud:', requestBodyData);
   
+      // Log antes de enviar la solicitud
+      console.log('Solicitud a la API:', {
+        url: apiURL,
+        method: 'POST',
+        data: requestBodyData,
+      });
+  
       const response = await axios.post(apiURL, requestBodyData);
+  
+      // Log después de recibir la respuesta
+      console.log('Respuesta de la API:', response.data);
+  
       const addedItem = response.data;
   
       setInventoryList((prevList) => [...prevList, addedItem]);
@@ -233,10 +251,16 @@ const InventoryPage = () => {
     } catch (error) {
       setError(error);
       console.error('Error al agregar el item:', error);
+  
+      // Log de la respuesta de error si está disponible
+      if (error.response) {
+        console.error('Respuesta de error de la API:', error.response.data);
+      }
     } finally {
       setLoading(false);
     }
   };
+  
   
   
 
@@ -286,6 +310,10 @@ const InventoryPage = () => {
   };
 
   const getProductTypeItemName = (productType, item) => {
+    let color;
+    let nombre;
+    let tela; // Move the declaration outside the switch block
+  
     switch (productType) {
       case 'espumilla':
         return espumillaList.find((espumilla) => espumilla.id === item.tipoEspumilla)?.nombre || 'Nombre no disponible';
@@ -293,11 +321,18 @@ const InventoryPage = () => {
         return materialList.find((material) => material.id === item.tipoMaterial)?.nombre || 'Nombre no disponible';
       case 'producto':
         return productList.find((producto) => producto.id === item.producto)?.descripcion || 'Nombre no disponible';
-      
+      case 'telaColor':
+        tela = fabricList.find((telaColor) => telaColor.id === item.tela_Color); // Move the assignment here
+        console.log('Tela:', tela);
+        color = color?.color || 'Color no disponible';
+        nombre = tela?.nombre || 'Nombre no disponible';
+        console.log('Nombre y color:', nombre, color);
+        return `${nombre} - Color: ${color}`;
       default:
         return 'Nombre no disponible';
     }
   };
+  
 
   const handleProductTypeChange = async (event) => {
     const selectedType = event.target.value;
@@ -425,7 +460,7 @@ const fetchAllProductTypesData = async () => {
       case 'telaColor':
         return fabricList.map((item) => ({
           id: item.id,
-          descripcion: `${item.tela.nombre} ${item.color.nombre}`,
+          descripcion: item.nombre,
         }));
       default:
         return [];
@@ -465,7 +500,10 @@ const fetchAllProductTypesData = async () => {
         axios.get(API_URLS.existenciasTelasColores),
       ]);
 
-
+      setExistenciasEspumillasList(existenciasEspumillas.data);
+      setExistenciasMaterialesList(existenciasMateriales.data);
+      setExistenciasProductosList(existenciasProductos.data);
+      setExistenciasTelasColoresList(existenciasTelasColores.data);
 
       const inventoryExistenciasData = [...existenciasEspumillas.data, ...existenciasMateriales.data, ...existenciasProductos.data, ...existenciasTelasColores.data];
 
@@ -492,7 +530,7 @@ const fetchAllProductTypesData = async () => {
           axios.get(API_URLS.tiposEspumillas),
           axios.get(API_URLS.tiposMateriales),
           axios.get(API_URLS.productos),
-          axios.get(API_URLS.telasColores),
+          axios.get(API_URLS.tiposTelas),
         ]);
 
         setEspumillaList(espumillas.data);
