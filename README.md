@@ -18,7 +18,7 @@
 
 Puedes explorar las siguientes páginas de demostración:
 
-- [Dashboard]([https://minimal-kit-react.vercel.app/dashboard/app](http://localhost:3000/dashboard/app))
+- [Dashboard](http://localhost:3000/dashboard/app)
 - [Usuarios](https://minimal-kit-react.vercel.app/dashboard/user)
 - [Productos](https://minimal-kit-react.vercel.app/dashboard/products)
 - [Blog](https://minimal-kit-react.vercel.app/dashboard/blog)
