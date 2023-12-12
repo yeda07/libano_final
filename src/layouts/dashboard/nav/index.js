@@ -32,7 +32,7 @@ export default function Nav({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
   const navigate = useNavigate(); // Cambiado de useHistory a useNavigate
   const isDesktop = useResponsive('up', 'lg');
-  const [isAuthenticated, setIsAuthenticated] = useState(true); 
+  const [ setIsAuthenticated] = useState(true); 
 
   useEffect(() => {
     if (openNav) {

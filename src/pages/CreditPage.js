@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import {
@@ -90,7 +91,7 @@ const CreditPage = () => {
   };
 
   const handleFilterNameChange = (event) => {
-    const value = event.target.value;
+    const {value} = event.target;
     setFilterName(value); 
 
     const filteredCredits = creditList.filter(
