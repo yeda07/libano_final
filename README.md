@@ -1,4 +1,3 @@
-
 # Minimal React Admin Dashboard
 
 ![Preview](public/assets/preview.jpg)
@@ -19,7 +18,7 @@
 
 Puedes explorar las siguientes páginas de demostración:
 
-- [Dashboard](https://minimal-kit-react.vercel.app/dashboard/app)
+- [Dashboard](http:///dashboard/app)
 - [Usuarios](https://minimal-kit-react.vercel.app/dashboard/user)
 - [Productos](https://minimal-kit-react.vercel.app/dashboard/products)
 - [Blog](https://minimal-kit-react.vercel.app/dashboard/blog)
@@ -41,6 +40,7 @@ Este proyecto se distribuye bajo la **Licencia MIT**. Consulta [LICENSE](https:/
 ## Contáctanos
 
 Si tienes alguna pregunta o necesitas asistencia, no dudes en contactarnos por correo electrónico: [support@minimals.cc](jossajhon123454@gmail.com).
+
 
 
 
