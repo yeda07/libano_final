@@ -17,7 +17,7 @@ export default function ColorMultiPicker({ colors, selected, onChangeColor, sx, 
   return (
     <Box sx={sx}>
       {colors.map((color) => {
-        const whiteColor = color === '#91BCEC' || color === 'white';
+        const whiteColor = color === '#ec9191' || color === '#ec9191';
 
         return (
           <Checkbox

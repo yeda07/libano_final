@@ -10,7 +10,7 @@ import Icon from './Icon';
 const ColorSinglePicker = forwardRef(({ colors, ...other }, ref) => (
   <RadioGroup row ref={ref} {...other}>
     {colors.map((color) => {
-      const whiteColor = color === '#FFFFFF' || color === 'white';
+      const whiteColor = color === '#ec9191' || color === 'white';
 
       return (
         <Radio

@@ -63,7 +63,7 @@ function UserListComponent() {
           return;
         }
   
-        const response = await fetch('https://tapiceria-7efd4dfba1d5.herokuapp.com/apiusers/', {
+        const response = await fetch('https://tapiceria-7efd4dfba1d5.herokuapp.com/apiauth/me', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

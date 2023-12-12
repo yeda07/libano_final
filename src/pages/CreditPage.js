@@ -37,6 +37,14 @@ const CreditPage = () => {
     usuario: 0,
   });
 
+  const [editCreditData, setEditCreditData] = useState({
+    id: null,
+    total_credito: 0,
+    monto_inicial: 0,
+    fecha_credito: '',
+    usuario: 0,
+  });
+
   const [filterName, setFilterName] = useState('');
 
   const handleRequestSort = (event, property) => {
@@ -60,6 +68,13 @@ const CreditPage = () => {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
+    setEditCreditData({
+      id: null,
+      total_credito: 0,
+      monto_inicial: 0,
+      fecha_credito: '',
+      usuario: 0,
+    });
   };
 
   const handleInputChange = (event) => {
@@ -68,11 +83,15 @@ const CreditPage = () => {
       ...prevData,
       [name]: value,
     }));
+    setEditCreditData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleFilterNameChange = (event) => {
     const value = event.target.value;
-    setFilterName(value);
+    setFilterName(value); 
 
     const filteredCredits = creditList.filter(
       (credit) => credit.applicantName.toLowerCase().includes(value.toLowerCase())
@@ -106,7 +125,7 @@ const CreditPage = () => {
       const response = await fetch(`https://tapiceria-7efd4dfba1d5.herokuapp.com/apicreditos/${creditId}/`, {
         method: 'DELETE',
       });
-  
+
       if (response.ok) {
         fetchCreditData();
       } else {
@@ -114,7 +133,41 @@ const CreditPage = () => {
       }
     } catch (error) {
       console.error('Error deleting credit:', error);
-    }};
+    }
+  };
+
+  const handleOpenEditForm = (credit) => {
+    setEditCreditData({
+      id: credit.id,
+      total_credito: credit.amount,
+      monto_inicial: credit.amount, // Ajusta según tu estructura de datos
+      fecha_credito: credit.applicationDate,
+      usuario: credit.usuario,
+    });
+    setOpenDialog(true);
+  };
+
+  const handleEditCredit = async () => {
+    try {
+      const response = await fetch(`https://tapiceria-7efd4dfba1d5.herokuapp.com/apicreditos/${editCreditData.id}/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(editCreditData),
+      });
+
+      if (response.ok) {
+        fetchCreditData();
+        handleCloseDialog();
+      } else {
+        console.error('Error updating credit:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error updating credit:', error);
+    }
+  };
+
   const fetchCreditData = async () => {
     try {
       const response = await fetch('https://tapiceria-7efd4dfba1d5.herokuapp.com/apicreditos/');
@@ -185,10 +238,7 @@ const CreditPage = () => {
                       <TableCell>
                         <IconButton
                           color="primary"
-                          onClick={() => {
-                            // Lógica para editar el crédito
-                            console.log('Edit credit with id:', credit.id);
-                          }}
+                          onClick={() => handleOpenEditForm(credit)}
                         >
                           <Iconify icon={'eva:edit-fill'} />
                         </IconButton>
@@ -196,10 +246,7 @@ const CreditPage = () => {
                       <TableCell>
                         <IconButton
                           color="error"
-                          onClick={() => {
-                            // Lógica para eliminar el crédito
-                            deleteCredit(credit.id); // Llama a la función deleteCredit con el ID del crédito
-                          }}
+                          onClick={() => deleteCredit(credit.id)}
                         >
                           <Iconify icon={'eva:trash-2-outline'} />
                         </IconButton>
@@ -223,13 +270,13 @@ const CreditPage = () => {
       </Container>
 
       <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>New Credit</DialogTitle>
+        <DialogTitle>{editCreditData.id ? 'Edit Credit' : 'New Credit'}</DialogTitle>
         <DialogContent>
           <TextField
             label="Total del Credito"
             type="number"
             name="total_credito"
-            value={newCreditData.total_credito}
+            value={editCreditData.total_credito}
             onChange={handleInputChange}
             fullWidth
             margin="normal"
@@ -238,7 +285,7 @@ const CreditPage = () => {
             label="monto inicial"
             type="number"
             name="monto_inicial"
-            value={newCreditData.monto_inicial}
+            value={editCreditData.monto_inicial}
             onChange={handleInputChange}
             fullWidth
             margin="normal"
@@ -247,7 +294,7 @@ const CreditPage = () => {
             label="fecha de credito"
             type="date"
             name="fecha_credito"
-            value={newCreditData.fecha_credito}
+            value={editCreditData.fecha_credito}
             onChange={handleInputChange}
             fullWidth
             margin="normal"
@@ -256,7 +303,7 @@ const CreditPage = () => {
             label="usuario"
             type="number"
             name="usuario"
-            value={newCreditData.usuario}
+            value={editCreditData.usuario}
             onChange={handleInputChange}
             fullWidth
             margin="normal"
@@ -266,8 +313,8 @@ const CreditPage = () => {
           <Button onClick={handleCloseDialog} color="primary">
             Cancel
           </Button>
-          <Button onClick={createNewCredit} color="primary">
-            Create
+          <Button onClick={editCreditData.id ? handleEditCredit : createNewCredit} color="primary">
+            {editCreditData.id ? 'Update' : 'Create'}
           </Button>
         </DialogActions>
       </Dialog>

@@ -4,7 +4,7 @@ import { alpha } from '@mui/material/styles';
 // ----------------------------------------------------------------------
 
 export function bgBlur(props) {
-  const color = props?.color || '#191A18';
+  const color = props?.color || '#ec9191';
   const blur = props?.blur || 6;
   const opacity = props?.opacity || 0.8;
   const imgUrl = props?.imgUrl;
