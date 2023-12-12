@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import PropTypes from 'prop-types'; // Importa PropTypes
-import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
 const AddProductForm = ({ onClose, initialProduct, setProducts }) => {
   const { register, handleSubmit, setValue } = useForm();
@@ -15,9 +15,7 @@ const AddProductForm = ({ onClose, initialProduct, setProducts }) => {
     tipoProducto: '',
     tipoMaterial: '',
   });
-  const [tiposMateriales, setTiposMateriales] = useState([]);
-  const [tiposProductos, setTiposProductos] = useState([]);
-
+  
   useEffect(() => {
     const fetchData = async () => {
       const responseMateriales = await fetch('https://tapiceria-7efd4dfba1d5.herokuapp.com/apitipos_materiales/');
@@ -25,9 +23,7 @@ const AddProductForm = ({ onClose, initialProduct, setProducts }) => {
       const dataMateriales = await responseMateriales.json();
       const dataProductos = await responseProductos.json();
 
-      setTiposMateriales(dataMateriales);
-      setTiposProductos(dataProductos);
-
+     
       if (initialProduct) {
         setProductData(initialProduct);
         setValue('tipoProducto', initialProduct.tipoProducto);

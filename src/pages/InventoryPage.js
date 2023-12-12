@@ -64,11 +64,7 @@ const InventoryPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const [existenciasEspumillasList, setExistenciasEspumillasList] = useState([]);
-  const [existenciasMaterialesList, setExistenciasMaterialesList] = useState([]);
-  const [existenciasProductosList, setExistenciasProductosList] = useState([]);
-  const [existenciasTelasColoresList, setExistenciasTelasColoresList] = useState([]);
-  const [inventoryExistenciasData, setInventoryExistenciasData] = useState([]);
+ 
 
   const [selectedProductType, setSelectedProductType] = useState('');
   const [productTypeData, setProductTypeData] = useState([]);
@@ -469,10 +465,7 @@ const fetchAllProductTypesData = async () => {
         axios.get(API_URLS.existenciasTelasColores),
       ]);
 
-      setExistenciasEspumillasList(existenciasEspumillas.data);
-      setExistenciasMaterialesList(existenciasMateriales.data);
-      setExistenciasProductosList(existenciasProductos.data);
-      setExistenciasTelasColoresList(existenciasTelasColores.data);
+
 
       const inventoryExistenciasData = [...existenciasEspumillas.data, ...existenciasMateriales.data, ...existenciasProductos.data, ...existenciasTelasColores.data];
 

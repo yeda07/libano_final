@@ -51,7 +51,7 @@ function UserListComponent() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [users, setUsers] = useState([]);
-  const [authenticatedUser, setAuthenticatedUser,obtenerIdUsuarioDesdeToken] = useState(null);
+  const [ setAuthenticatedUser,obtenerIdUsuarioDesdeToken] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -72,15 +72,7 @@ function UserListComponent() {
         if (response.ok) {
           const data = await response.json();
 
-          // Obtén el ID del usuario autenticado desde el token o de otra fuente si es necesario
-          const authenticatedUserId = obtenerIdUsuarioDesdeToken(token); // Reemplaza esto con tu lógica para obtener el ID del usuario autenticado
-
-          // Busca el usuario autenticado por su ID
-          const authenticatedUser = data.find(user => user.id === authenticatedUserId);
-
-          // Se establece el usuario autenticado
-          setAuthenticatedUser(authenticatedUser);
-          setUsers(data);
+    
         } else {
           console.error('Error fetching user data from the API:', response.statusText);
         }

@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { faker } from '@faker-js/faker';
+
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography, Card, CardContent, CardMedia } from '@mui/material';
@@ -7,21 +7,11 @@ import { Grid, Container, Typography, Card, CardContent, CardMedia } from '@mui/
 import Iconify from '../components/iconify';
 import AppTrafficBySite from '../sections/@dashboard/AppTrafficBySite/AppTrafficBySite';
 // sections
-import {
-  AppTasks,
-  AppNewsUpdate,
-  AppOrderTimeline,
-  AppCurrentVisits,
-  AppWebsiteVisits,
-  AppWidgetSummary,
-  AppCurrentSubject,
-  AppConversionRates,
-} from '../sections/@dashboard/app';
+
 
 // ----------------------------------------------------------------------
 
 export default function DashboardAppPage() {
-  const theme = useTheme();
 
   // Función para obtener rutas de imágenes locales
   const getImagePath = (imageName) => `/public/assets/images/products${imageName}`; // Ajusta la ruta según tu estructura de carpetas

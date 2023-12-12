@@ -42,37 +42,11 @@ const ProductsPage = () => {
     fetchData();
   }, []);
 
-  const handleOpenEditForm = (product) => {
-    setIsAddFormOpen(true);
-    setSelectedProduct(product);
-  };
+ 
 
-  const handleDeleteProduct = async (productId) => {
-    try {
-      const url = `https://tapiceria-7efd4dfba1d5.herokuapp.com/apiproductos/${productId}`;
-      
-      const response = await fetch(url, {
-        method: 'DELETE',
-      });
+  
 
-      if (response.ok) {
-        console.log('Producto eliminado con éxito');
-        // Actualiza la lista de productos después de eliminar uno
-        const updatedProducts = await fetch('https://tapiceria-7efd4dfba1d5.herokuapp.com/apiproductos/')
-          .then(response => response.json());
-        setProducts(updatedProducts);
-      } else {
-        console.error('Error al eliminar el producto:', response.status, response.statusText);
-      }
-    } catch (error) {
-      console.error('Error al realizar la solicitud:', error);
-    }
-  };
-
-  const handleAddToCart = (product) => {
-    // Aquí puedes implementar la lógica para agregar el producto al carrito de compras
-    console.log(`Agregar producto al carrito: ${product.descripcion}`);
-  };
+  
   
 
   return (
