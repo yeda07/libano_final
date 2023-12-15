@@ -37,7 +37,7 @@ export default function DashboardAppPage() {
                 component="img"
                 alt="mueble"
                 height="200"
-                image={getImagePath('yeda.jpg')}
+                image={getImagePath('product_5.jpg')}
                 style={{ width: '100%', objectFit: 'cover' }}
               />
               <CardContent>

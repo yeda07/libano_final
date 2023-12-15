@@ -3,12 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
-const AddSaleForm = ({ onClose, initialSale, setSales, }) => {
+const SalesForm = ({ onClose, initialSale, setSales }) => {
   const { register, handleSubmit, setValue } = useForm();
   const [saleData, setSaleData] = useState({
-    cantidad: '',
-    venta: '',
-    producto: '',
+    fecha_venta: '',
+    comprador: '',
+    vendedor: '',
   });
 
   useEffect(() => {
@@ -16,10 +16,7 @@ const AddSaleForm = ({ onClose, initialSale, setSales, }) => {
       setSaleData(initialSale);
       setValue('cantidad', initialSale.cantidad);
       setValue('venta', initialSale.venta);
-  
-      if (initialSale.producto) {
-        setValue('producto', initialSale.producto.id);
-      }
+      setValue('producto', initialSale.producto ? initialSale.producto.id : ''); // Verifica si producto está definido antes de acceder a su id
     }
   }, [initialSale, setValue]);
 
@@ -29,12 +26,13 @@ const AddSaleForm = ({ onClose, initialSale, setSales, }) => {
       [field]: value,
     }));
   };
+  
 
   const onSubmit = async (data) => {
     try {
       const url = initialSale
-        ? `https://tapiceria-7efd4dfba1d5.herokuapp.com/apiventasProductos/${initialSale.id}`
-        : 'https://tapiceria-7efd4dfba1d5.herokuapp.com/apiventasProductos/';
+        ? `https://tapiceria-7efd4dfba1d5.herokuapp.com/apiventas/${initialSale.id}`
+        : 'https://tapiceria-7efd4dfba1d5.herokuapp.com/apiventas/';
 
       const method = initialSale ? 'PUT' : 'POST';
 
@@ -43,13 +41,13 @@ const AddSaleForm = ({ onClose, initialSale, setSales, }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(initialSale ? { ...initialSale, ...data, producto: { id: data.producto } } : data),
+        body: JSON.stringify(initialSale ? { ...initialSale, ...data } : data),
       });
 
       if (response.ok) {
         console.log(`${initialSale ? 'Venta editada' : 'Venta agregada'} con éxito`);
         // Actualiza la lista de ventas después de agregar/editar una
-        const updatedSales = await fetch('https://tapiceria-7efd4dfba1d5.herokuapp.com/apiventasProductos/')
+        const updatedSales = await fetch('https://tapiceria-7efd4dfba1d5.herokuapp.com/apiventas/')
           .then(response => response.json());
         setSales(updatedSales);
       } else {
@@ -70,28 +68,28 @@ const AddSaleForm = ({ onClose, initialSale, setSales, }) => {
             <input type="hidden" {...register('id')} value={initialSale.id} />
           )}
           <TextField
-            {...register('cantidad')}
-            label="Cantidad"
+            {...register('fecha_venta')}
+            label="Fecha de Venta"
             fullWidth
             margin="normal"
-            value={saleData.cantidad}
-            onChange={(e) => handleChange('cantidad', e.target.value)}
+            value={saleData.fecha_venta}
+            onChange={(e) => handleChange('fecha_venta', e.target.value)}
           />
           <TextField
-            {...register('venta')}
-            label="Venta"
+            {...register('comprador')}
+            label="Comprador"
             fullWidth
             margin="normal"
-            value={saleData.venta}
-            onChange={(e) => handleChange('venta', e.target.value)}
+            value={saleData.comprador}
+            onChange={(e) => handleChange('comprador', e.target.value)}
           />
           <TextField
-            {...register('producto')}
-            label="Producto"
+            {...register('vendedor')}
+            label="Vendedor"
             fullWidth
             margin="normal"
-            value={saleData.producto}
-            onChange={(e) => handleChange('producto', e.target.value)}
+            value={saleData.vendedor}
+            onChange={(e) => handleChange('vendedor', e.target.value)}
           />
           <DialogActions>
             <Button onClick={onClose}>Cancelar</Button>
@@ -105,4 +103,4 @@ const AddSaleForm = ({ onClose, initialSale, setSales, }) => {
   );
 };
 
-export default AddSaleForm;
+export default SalesForm;

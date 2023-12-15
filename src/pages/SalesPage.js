@@ -7,7 +7,8 @@ import {
   Button,
   Paper,
 } from '@mui/material';
-import { AddSaleForm } from '../sections/@dashboard/sale';
+import { AddSaleForm, SalesForm } from '../sections/@dashboard/sale';
+
 
 const SalesPage = () => {
   const [sales, setSales] = useState([]);
@@ -15,7 +16,7 @@ const SalesPage = () => {
   const [products, setProducts] = useState([]);  // Agrega el estado de productos
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
   const [selectedSale, setSelectedSale] = useState(null);
-
+  const [isAddSalesFormOpen, setIsAddSalesFormOpen] = useState(false);
   const handleOpenAddForm = () => {
     setIsAddFormOpen(true);
     setSelectedSale(null);
@@ -23,8 +24,14 @@ const SalesPage = () => {
 
   const handleCloseAddForm = () => {
     setIsAddFormOpen(false);
+    setIsAddSalesFormOpen(false);
     setSelectedSale(null);
   };
+  const handleOpenSalesForm = () => {
+    setIsAddSalesFormOpen(true);
+    setSelectedSale(null);
+  };
+  
 
   useEffect(() => {
     const fetchSales = async () => {
@@ -100,9 +107,14 @@ const SalesPage = () => {
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">List Sales</Typography>
-        <Button variant="contained" onClick={handleOpenAddForm}>
-          New Sale
-        </Button>
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <Button variant="contained" onClick={handleOpenAddForm}>
+            New Sale
+          </Button>
+          <Button variant="contained" onClick={handleOpenSalesForm}>
+            Sales Form
+          </Button>
+        </Stack>
       </Stack>
 
       {/* Tarjetas de ventas */}
@@ -144,6 +156,7 @@ const SalesPage = () => {
                 <Typography variant="subtitle1" color="textSecondary">Precio Total de la Venta: ${relatedSalesProducts.reduce((total, item) => total + (getProductNameById(item.producto).precioVenta * item.cantidad), 0)}</Typography>
               </Paper>
             </Paper>
+            
           );
         })}
       </Stack>
@@ -156,6 +169,15 @@ const SalesPage = () => {
           setSales={setSales}
           onAddSale={handleAddSale} // Pasa la función onAddSale al formulario
           products={products} // Pasa la lista de productos al formulario
+        />
+      )}
+      {/* Formulario para ver las ventas */}
+      {isAddSalesFormOpen && (
+        <SalesForm
+          onClose={handleCloseAddForm}
+          initialSale={selectedSale}
+          setSales={setSales}
+          // Asegúrate de pasar las propiedades necesarias aquí
         />
       )}
     </Container>

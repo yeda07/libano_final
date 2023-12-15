@@ -1,12 +1,10 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import {
   Card,
   Table,
-  Stack,
-  Paper,
-  Button,
+  TableHead,
+  TableSortLabel,
   TableRow,
   TableBody,
   TableCell,
@@ -19,9 +17,59 @@ import {
   TextField,
   DialogActions,
   IconButton,
+  Button,
+  Stack,
+  Paper,
 } from '@mui/material';
 import Iconify from '../components/iconify';
-import { CreditListHead, CreditListToolbar } from '../sections/@dashboard/credit';
+import { CreditListToolbar } from '../sections/@dashboard/credit';
+
+const CreditListHead = (props) => {
+  const { order, orderBy, onRequestSort } = props;
+  const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property);
+  };
+
+  const headCells = [
+    { id: 'applicantName', label: 'Usuario' },
+    { id: 'total_credito', label: 'Total Crédito' },
+    { id: 'amount', label: 'Monto Inicial-consumido' },
+    { id: 'status', label: 'Estado' },
+    { id: 'applicationDate', label: 'Fecha' },
+    { id: 'edit', label: 'Actualizar' },
+    { id: 'delete', label: 'Eliminar' },
+  ];
+
+  return (
+    <TableHead>
+      <TableRow>
+        {headCells.map((headCell) => (
+          <TableCell
+            key={headCell.id}
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
+            <TableSortLabel
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : 'asc'}
+              onClick={createSortHandler(headCell.id)}
+            >
+              {headCell.label}
+              {orderBy === headCell.id ? (
+                <span style={{ border: 0 }}>
+                  {order === 'desc' ? (
+                    <Iconify icon="eva:arrow-downward-fill" />
+                  ) : (
+                    <Iconify icon="eva:arrow-upward-fill" />
+                  )}
+                </span>
+              ) : null}
+            </TableSortLabel>
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
+  );
+};
 
 const CreditPage = () => {
   const [creditList, setCreditList] = useState([]);
@@ -48,13 +96,13 @@ const CreditPage = () => {
 
   const [filterName, setFilterName] = useState('');
 
-  const handleRequestSort = (event, property) => {
+  const handleRequestSort = (_event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_event, newPage) => {
     setPage(newPage);
   };
 
@@ -91,8 +139,8 @@ const CreditPage = () => {
   };
 
   const handleFilterNameChange = (event) => {
-    const {value} = event.target;
-    setFilterName(value); 
+    const { value } = event.target;
+    setFilterName(value);
 
     const filteredCredits = creditList.filter(
       (credit) => credit.applicantName.toLowerCase().includes(value.toLowerCase())
@@ -140,8 +188,8 @@ const CreditPage = () => {
   const handleOpenEditForm = (credit) => {
     setEditCreditData({
       id: credit.id,
-      total_credito: credit.amount,
-      monto_inicial: credit.amount, // Ajusta según tu estructura de datos
+      total_credito: credit.total_credito, // Cambio aquí
+      monto_inicial: credit.amount,
       fecha_credito: credit.applicationDate,
       usuario: credit.usuario,
     });
@@ -177,6 +225,7 @@ const CreditPage = () => {
       const mappedData = data.map((apiCredit) => ({
         id: apiCredit.id,
         applicantName: `Usuario ${apiCredit.usuario}`,
+        total_credito: apiCredit.total_credito, // Cambio aquí
         amount: apiCredit.monto_inicial,
         status: 'disponible',
         applicationDate: apiCredit.fecha_credito,
@@ -233,6 +282,7 @@ const CreditPage = () => {
                   .map((credit) => (
                     <TableRow key={credit.id}>
                       <TableCell>{credit.applicantName}</TableCell>
+                      <TableCell>{credit.total_credito}</TableCell>
                       <TableCell>{credit.amount}</TableCell>
                       <TableCell>{credit.status}</TableCell>
                       <TableCell>{credit.applicationDate}</TableCell>
@@ -274,7 +324,7 @@ const CreditPage = () => {
         <DialogTitle>{editCreditData.id ? 'Edit Credit' : 'New Credit'}</DialogTitle>
         <DialogContent>
           <TextField
-            label="Total del Credito"
+            label="Total_Credito"
             type="number"
             name="total_credito"
             value={editCreditData.total_credito}
@@ -283,7 +333,7 @@ const CreditPage = () => {
             margin="normal"
           />
           <TextField
-            label="monto inicial"
+            label="Monto Inicial"
             type="number"
             name="monto_inicial"
             value={editCreditData.monto_inicial}
@@ -292,7 +342,7 @@ const CreditPage = () => {
             margin="normal"
           />
           <TextField
-            label="fecha de credito"
+            label="Fecha de Credito"
             type="date"
             name="fecha_credito"
             value={editCreditData.fecha_credito}
@@ -301,7 +351,7 @@ const CreditPage = () => {
             margin="normal"
           />
           <TextField
-            label="usuario"
+            label="Usuario"
             type="number"
             name="usuario"
             value={editCreditData.usuario}
