@@ -24,6 +24,7 @@ Puedes explorar las siguientes páginas de demostración:
 - [Blog](https://minimal-kit-react.vercel.app/dashboard/blog)
 - [Inicio de Sesión](https://minimal-kit-react.vercel.app/login)
 - [Página no encontrada](https://minimal-kit-react.vercel.app/404)
+- https://libano-final-github-io.vercel.app/
 
 ## Comenzar
 
