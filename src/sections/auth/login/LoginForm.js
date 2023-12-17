@@ -31,33 +31,33 @@ export default function LoginForm() {
           password: formData.password,
         }),
       });
-
+  
       if (response.ok) {
         const userData = await response.json();
-
-        // Check if the user is authenticated
+  
         if (userData.access) {
-          // Save the token to local storage
-          localStorage.setItem('token', userData.access);
+          // Almacenar el token en localStorage
+          localStorage.setItem('accessToken', userData.access);
           console.log('Usuario autenticado:', userData);
-          console.log('Usuario está logeado');
-          // Redirect to the dashboard
+          // Redirigir al usuario al panel de control
           navigate('/dashboard/app', { replace: true });
         } else {
-          console.log('Usuario no está logeado');
-          // Show error message
+          // Mostrar mensaje de error si no hay token
           setError('Credenciales no válidas. Por favor, inténtalo de nuevo.');
         }
       } else {
-        // Show error message
+        // Mostrar mensaje de error para respuestas no exitosas
+        const errorData = await response.json(); // Intenta obtener más detalles del error desde la respuesta
+        console.error('Error al autenticar:', errorData);
         setError('Credenciales no válidas. Por favor, inténtalo de nuevo.');
       }
     } catch (error) {
-      // Communication with the server
+      // Mostrar mensaje de error para errores de red u otros errores
       console.error('Error al comunicarse con el servidor', error);
       setError('Error en la comunicación con el servidor. Por favor, inténtalo de nuevo.');
     }
   };
+  
 
   return (
     <Stack spacing={3}>

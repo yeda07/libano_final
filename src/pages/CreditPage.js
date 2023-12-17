@@ -20,6 +20,7 @@ import {
   Button,
   Stack,
   Paper,
+  MenuItem,
 } from '@mui/material';
 import Iconify from '../components/iconify';
 import { CreditListToolbar } from '../sections/@dashboard/credit';
@@ -95,6 +96,8 @@ const CreditPage = () => {
   });
 
   const [filterName, setFilterName] = useState('');
+  const [userList, setUserList] = useState([]);
+  const [selectedUser, setSelectedUser] = useState('');
 
   const handleRequestSort = (_event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -128,6 +131,11 @@ const CreditPage = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
+
+    if (name === 'usuario') {
+      setSelectedUser(value);
+    }
+
     setNewCreditData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -155,7 +163,10 @@ const CreditPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newCreditData),
+        body: JSON.stringify({
+          ...newCreditData,
+          usuario: selectedUser,
+        }),
       });
 
       if (response.ok) {
@@ -188,7 +199,7 @@ const CreditPage = () => {
   const handleOpenEditForm = (credit) => {
     setEditCreditData({
       id: credit.id,
-      total_credito: credit.total_credito, // Cambio aquí
+      total_credito: credit.total_credito,
       monto_inicial: credit.amount,
       fecha_credito: credit.applicationDate,
       usuario: credit.usuario,
@@ -225,7 +236,7 @@ const CreditPage = () => {
       const mappedData = data.map((apiCredit) => ({
         id: apiCredit.id,
         applicantName: `Usuario ${apiCredit.usuario}`,
-        total_credito: apiCredit.total_credito, // Cambio aquí
+        total_credito: apiCredit.total_credito,
         amount: apiCredit.monto_inicial,
         status: 'disponible',
         applicationDate: apiCredit.fecha_credito,
@@ -242,8 +253,33 @@ const CreditPage = () => {
     }
   };
 
+  const fetchUserList = async () => {
+    try {
+      const response = await fetch('https://tapiceria-7efd4dfba1d5.herokuapp.com/apiusers/', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'X-CSRFToken': 'fqp5Ix3rXXm45nlNhkIxN8WCVVEaATtEXMHBmAWBF4c4zLsx75JUcsxO9YcL1Phr',
+        },
+      });
+  
+      const data = await response.json();
+  
+      // Verificar que la respuesta sea un array antes de intentar mapearlo
+      if (Array.isArray(data)) {
+        setUserList(data);
+      } else {
+        console.error('La respuesta de la API de usuarios no es un array:', data);
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+  
+
   useEffect(() => {
     fetchCreditData();
+    fetchUserList();  // Llamamos a la función para cargar la lista de usuarios
   }, [filterName]);
 
   return (
@@ -258,7 +294,9 @@ const CreditPage = () => {
             <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpenDialog}>
               New Credit
             </Button>
+           
           </Stack>
+          
         </Stack>
 
         <Card>
@@ -352,13 +390,19 @@ const CreditPage = () => {
           />
           <TextField
             label="Usuario"
-            type="number"
+            select
             name="usuario"
-            value={editCreditData.usuario}
+            value={selectedUser}
             onChange={handleInputChange}
             fullWidth
             margin="normal"
-          />
+          >
+            {userList.map((user) => (
+              <MenuItem key={user.id} value={user.id}>
+                {user.nombre}
+              </MenuItem>
+            ))}
+          </TextField>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog} color="primary">

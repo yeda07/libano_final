@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Link, Container, Typography, Divider } from '@mui/material';
+import { Container, Typography, Divider } from '@mui/material';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
@@ -73,15 +73,6 @@ export default function LoginPage() {
             <Typography variant="h4" gutterBottom>
             INICIA SESION
             </Typography>
-
-            <Typography variant="body2" sx={{ mb: 5 }}>
-              No tienes una cuenta? {''}
-              <Link variant="subtitle2">Registrate</Link>
-            </Typography>
-
-           
-
-          
 
             <Divider sx={{ my: 3 }}>
               <Typography variant="body2" sx={{ color: 'text.warning' }}>

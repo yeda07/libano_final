@@ -1,6 +1,6 @@
 const account = {
-  displayName: 'yeider',
-  email: 'yeidercortes2021@itp.edu.co',
+  displayName: 'tapiceria',
+  email: 'tapicerialib@gmail.com',
   photoURL: '/assets/images/avatars/avatar_9.jpg',
 
   
