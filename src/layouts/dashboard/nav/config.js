@@ -35,18 +35,10 @@ const navConfig = [
     icon: icon('ic_credit'),
   },
 
-  {
-    title: 'blog',
-    path: '/dashboard/blog',
-    icon: icon('ic_blog'),
-  },
+
  
 
-  {
-    title: 'No se ha encontrado',
-    path: '/404',
-    icon: icon('ic_disabled'),
-  },
+  
 ];
 
 export default navConfig;

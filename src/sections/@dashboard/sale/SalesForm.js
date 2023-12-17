@@ -69,11 +69,13 @@ const SalesForm = ({ onClose, initialSale, setSales }) => {
           )}
           <TextField
             {...register('fecha_venta')}
-            label="Fecha de Venta"
-            fullWidth
-            margin="normal"
+            label=""
+            type="date"
+            name="fecha_venta"
             value={saleData.fecha_venta}
             onChange={(e) => handleChange('fecha_venta', e.target.value)}
+            fullWidth
+            margin="normal"
           />
           <TextField
             {...register('comprador')}

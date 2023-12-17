@@ -134,16 +134,16 @@ const SalesPage = () => {
     <Button
       variant="contained"
       onClick={handleOpenAddForm}
-      style={{ backgroundColor: 'brown', color: 'white', marginRight: '8px' }}
+      style={{ backgroundColor: 'blue', color: 'white', marginRight: '8px' }}
     >
-      New Sale
+      Agregar producto
     </Button>
     <Button
       variant="contained"
       onClick={handleOpenSalesForm}
-      style={{ backgroundColor: 'brown', color: 'white' }}
+      style={{ backgroundColor: 'blue', color: 'white' }}
     >
-      Sales Form
+      Nueva venta
     </Button>
   </Stack>
 </Stack>

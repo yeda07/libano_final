@@ -4,29 +4,11 @@ import {
   Container,
   Stack,
   Typography,
-  Button,
-
   Paper,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import AddProductForm from '../sections/@dashboard/products/AddProductForm';
-
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
-  const [isAddFormOpen, setIsAddFormOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null); // Agrega el estado para el producto seleccionado
-
-  // Funciones para manejar la apertura y cierre del formulario
-  const handleOpenAddForm = () => {
-    setIsAddFormOpen(true);
-    setSelectedProduct(null); // Limpiar el producto seleccionado al abrir el formulario
-  };
-
-  const handleCloseAddForm = () => {
-    setIsAddFormOpen(false);
-    setSelectedProduct(null); // Limpiar el producto seleccionado al cerrar el formulario
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,11 +26,6 @@ const ProductsPage = () => {
 
  
 
-  
-
-  
-  
-
   return (
     <Container>
       <Helmet>
@@ -56,11 +33,7 @@ const ProductsPage = () => {
       </Helmet>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">List Product</Typography>
-        
-        <Button variant="contained" startIcon={<EditIcon />} onClick={handleOpenAddForm}>
-          New Product
-        </Button>
+        <Typography variant="h4">Existencia de productos </Typography>
       </Stack>
 
       {/* Tabla de productos */}
@@ -74,16 +47,6 @@ const ProductsPage = () => {
           </Paper>
         ))}
       </Stack>
-
-      {/* Formulario para agregar/editar productos */}
-      {isAddFormOpen && (
-        <AddProductForm
-        onClose={handleCloseAddForm}
-        initialProduct={selectedProduct}
-        setProducts={setProducts} // Pasa setProducts como prop al componente AddProductForm
-      />
-    
-      )}
     </Container>
   );
 };
