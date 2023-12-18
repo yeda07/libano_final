@@ -39,16 +39,6 @@ const AddSaleForm = ({ onClose, initialSale, setSales, products }) => {
     }
   }, [initialSale]);
 
-  // Update product field when the selected sale changes
-  useEffect(() => {
-    if (initialSale) {
-      setSaleData((prevData) => ({
-        ...prevData,
-        producto: initialSale.producto ? initialSale.producto.id : '',
-      }));
-    }
-  }, [initialSale]);
-
   const handleChange = (field, value) => {
     setSaleData((prevData) => ({
       ...prevData,
@@ -59,7 +49,7 @@ const AddSaleForm = ({ onClose, initialSale, setSales, products }) => {
   const onSubmit = async (data) => {
     try {
       console.log('Data before submission:', data);
-
+      
       const url = initialSale
         ? `https://tapiceria-7efd4dfba1d5.herokuapp.com/apiventasProductos/${initialSale.id}/`
         : 'https://tapiceria-7efd4dfba1d5.herokuapp.com/apiventasProductos/';
@@ -68,12 +58,13 @@ const AddSaleForm = ({ onClose, initialSale, setSales, products }) => {
 
       const bodyData = initialSale
         ? {
-          ...data,
-        }
+            ...data,
+            
+          }
         : {
-          ...data,
-          producto: { id: String(data.producto) },
-        };
+            ...data,
+            producto: data.producto,
+          };
 
       const response = await fetch(url, {
         method,
@@ -102,7 +93,7 @@ const AddSaleForm = ({ onClose, initialSale, setSales, products }) => {
 
   return (
     <Dialog open onClose={onClose}>
-      <DialogTitle>{initialSale ? 'Editar Venta' : 'Agregar Venta'}</DialogTitle>
+      <DialogTitle>{initialSale ? 'Editar producto' : 'Agregar producto'}</DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           {initialSale && (
