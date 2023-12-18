@@ -390,7 +390,7 @@ const CreditPage = () => {
           />
           <TextField
             label="Usuario"
-            select
+            type="number"
             name="usuario"
             value={selectedUser}
             onChange={handleInputChange}
