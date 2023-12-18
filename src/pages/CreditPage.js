@@ -253,33 +253,11 @@ const CreditPage = () => {
     }
   };
 
-  const fetchUserList = async () => {
-    try {
-      const response = await fetch('https://tapiceria-7efd4dfba1d5.herokuapp.com/apiusers/', {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'X-CSRFToken': 'fqp5Ix3rXXm45nlNhkIxN8WCVVEaATtEXMHBmAWBF4c4zLsx75JUcsxO9YcL1Phr',
-        },
-      });
   
-      const data = await response.json();
-  
-      // Verificar que la respuesta sea un array antes de intentar mapearlo
-      if (Array.isArray(data)) {
-        setUserList(data);
-      } else {
-        console.error('La respuesta de la API de usuarios no es un array:', data);
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
-  };
   
 
   useEffect(() => {
-    fetchCreditData();
-    fetchUserList();  // Llamamos a la función para cargar la lista de usuarios
+    fetchCreditData();  // Llamamos a la función para cargar la lista de usuarios
   }, [filterName]);
 
   return (
