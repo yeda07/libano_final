@@ -48,8 +48,6 @@ const InventoryPage = () => {
   const [inventoryList, setInventoryList] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('id');
   const [openDialog, setOpenDialog] = useState(false);
   const [newItemData, setNewItemData] = useState({
     itemType: '',
@@ -228,10 +226,9 @@ const InventoryPage = () => {
     },
   };
 
-  const handleAddItem = async (id = null) => {
+  const handleAddItem = async () => {
     try {
       setLoading(true);
-      console.log('id-handleAddItem', id ?? null);
       const mapping = itemTypeMappingsCompras[newItemData.itemType];
       if (!mapping) {
         console.error('Tipo de item no soportado:', newItemData.itemType);
@@ -244,7 +241,7 @@ const InventoryPage = () => {
         precio: 1,
         cantidad: parseInt(newItemData.cantidad, 10),
       };
-
+  
       console.log('Cuerpo de la solicitud:', requestBodyData);
       // Log antes de enviar la solicitud
       console.log('Solicitud a la API:', {
@@ -252,13 +249,18 @@ const InventoryPage = () => {
         method: 'POST',
         data: requestBodyData,
       });
-
+  
       const response = await axios.post(apiURL, requestBodyData);
       // Log después de recibir la respuesta
       console.log('Respuesta de la API:', response.data);
       const addedItem = response.data;
       setInventoryList((prevList) => [...prevList, addedItem]);
       handleCloseDialog();
+  
+      // Actualiza los datos después de agregar un nuevo elemento
+      const updatedProductTypeData = await fetchExistenciasDataForType(selectedProductType);
+      setProductTypeData(updatedProductTypeData);
+      setProductTypeDataAux(updatedProductTypeData);
     } catch (error) {
       setError(error);
       console.error('Error al agregar el item:', error);
@@ -350,13 +352,15 @@ const InventoryPage = () => {
     try {
       setLoading(true);
       setSelectedProductType(selectedType);
-
+  
       if (!selectedType) {
+        // Si no se selecciona ningún tipo, carga todos los productos
         const allProductTypesData = await fetchAllProductTypesData();
         setProductTypeData(allProductTypesData);
         setProductTypeDataAux(allProductTypesData);
         console.log('Datos de tipos de productos:', allProductTypesData);
       } else {
+        // Si se selecciona un tipo, carga los datos específicos de ese tipo
         const productTypeData = await fetchExistenciasDataForType(selectedType);
         setProductTypeData(productTypeData);
         setProductTypeDataAux(productTypeData);
@@ -368,7 +372,7 @@ const InventoryPage = () => {
       setLoading(false);
     }
   };
-
+  
   const fetchExistenciasDataForType = async (productType) => {
     const apiUrl = getProductTypeApiUrl(productType);
 
@@ -388,32 +392,6 @@ const InventoryPage = () => {
     } catch (error) {
       console.error('Error al obtener datos de existencias para el tipo:', error);
       return [];
-    }
-  };
-
-  const handleFetchProductTypeData = async (productType) => {
-    try {
-      const apiUrl = getProductTypeApiUrl(productType);
-      const response = await axios.get(apiUrl);
-      const data = response.data;
-
-      console.log('Data from API:', data);
-
-      const mappedData = data.map((item) => ({
-        id: item.id,
-        itemName: getProductTypeItemName(productType, item),
-        quantity: item.cantidad,
-      }));
-
-      console.log('Mapped Data:', mappedData);
-      console.log('Setting productTypeData:', mappedData);
-      setProductTypeData(mappedData);
-      setProductTypeDataAux(mappedData);
-    } catch (error) {
-      setError(error);
-      console.error('Error fetching product type data:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -563,22 +541,28 @@ const InventoryPage = () => {
   const handleDeleteItem = async (itemId, itemType) => {
     try {
       setLoading(true);
-
+  
       // Verificar si itemType existe en itemTypeMappings
       if (!itemTypeMappings[itemType]) {
         throw new Error(`Tipo de ítem no encontrado: ${itemType}`);
       }
-
+  
       const barra = '/';
       const apiUrl = itemTypeMappings[itemType].apiURL + itemId + barra;
       console.log('LINK', apiUrl);
-
+  
       await axios.delete(apiUrl);
-
+  
       console.log('Item eliminado correctamente');
-
+  
+      // Vuelve a cargar los datos después de eliminar el elemento
       const updatedInventory = inventoryList.filter((item) => item.id !== itemId);
       setInventoryList(updatedInventory);
+  
+      // Vuelve a cargar los productos específicos del tipo seleccionado
+      const updatedProductTypeData = await fetchExistenciasDataForType(selectedProductType);
+      setProductTypeData(updatedProductTypeData);
+      setProductTypeDataAux(updatedProductTypeData);
     } catch (error) {
       setError(error);
       console.error('Error deleting item:', error);
@@ -590,33 +574,38 @@ const InventoryPage = () => {
   const handleUpdateItem = async (item, productType, newCantidad) => {
     try {
       setLoading(true);
-
+  
       const { id } = item;
       const mapping = itemTypeMappings[productType];
-
+  
       if (!mapping) {
         console.error('Tipo de item no soportado:', productType);
         return;
       }
-
+  
       const { apiURL } = mapping;
       const apiUrl = `${apiURL}${id}/`; // Build the correct URL for updating an item
-
+  
       console.log('URL de la solicitud:', apiUrl);
       console.log('Datos de la solicitud:', { cantidad: newCantidad }); // Make sure updatedData is correct
-
+  
       const response = await axios.patch(apiUrl, { cantidad: newCantidad });
-
-      // Update the state with the updated data
+  
+      // Vuelve a cargar los datos después de actualizar el elemento
       const updatedProductTypeData = productTypeData.map((item) => {
         if (item.id === id) {
           return { ...item, cantidad: response.data.cantidad };
         }
         return item;
       });
-
+  
       setProductTypeData(updatedProductTypeData);
       handleCloseUpdateDialog();
+  
+      // Actualiza los datos después de editar un elemento
+      const updatedProductTypeDataAfterEdit = await fetchExistenciasDataForType(selectedProductType);
+      setProductTypeData(updatedProductTypeDataAfterEdit);
+      setProductTypeDataAux(updatedProductTypeDataAfterEdit);
     } catch (error) {
       setError(error);
       console.error('Error updating item:', error);
@@ -663,7 +652,6 @@ const InventoryPage = () => {
                 <MenuItem value="">Todos los productos</MenuItem>
                 <MenuItem value="espumilla">Espumilla</MenuItem>
                 <MenuItem value="material">Material</MenuItem>
-                <MenuItem value="producto">Producto</MenuItem>
                 <MenuItem value="telaColor">Tela y Color</MenuItem>
               </Select>
             </FormControl>
@@ -678,7 +666,7 @@ const InventoryPage = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>#</TableCell>
+
                   <TableCell>Nombre</TableCell>
                   <TableCell align="right">Existencias</TableCell>
                   <TableCell align="right">Acciones</TableCell>
@@ -687,7 +675,7 @@ const InventoryPage = () => {
               <TableBody>
                 {productTypeData.map((item) => (
                   <TableRow key={item.id}>
-                    <TableCell>{item.id}</TableCell>
+
                     <TableCell>{item.itemName}</TableCell>
                     <TableCell align="right">{item.quantity}</TableCell>
                     <TableCell align="right">
